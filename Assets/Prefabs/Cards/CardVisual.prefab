@@ -229,6 +229,9 @@ MonoBehaviour:
   selectionOffset: 50
   hoverScale: 1.1
   animationDuration: 0.2
+  maxRotationAngle: 45.1
+  rotationSensitivity: 5
+  rotationSmoothSpeed: 10
   selected: 0
   cardData: {fileID: 0}
   PointerEnterEvent:

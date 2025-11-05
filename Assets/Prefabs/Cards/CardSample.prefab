@@ -49,5 +49,5 @@ MonoBehaviour:
   cardDescription: "Inflinge 20 puntos de da\xF1o"
   cardArt: {fileID: 0}
   isPercentageDamage: 0
-  flatDamage: 50
+  flatDamage: 20
   percentageDamage: 0

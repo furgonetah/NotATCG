@@ -4,7 +4,7 @@ public class TurnManager : MonoBehaviour
 {
     [Header("References")]
     public CardQueue cardQueue;
-    public HandDisplayUI handDisplayUI;
+    public HandManager handManager; // CAMBIADO: Ahora usa HandManager en lugar de HandDisplayUI
 
     private GameState gameState;
 
@@ -13,8 +13,16 @@ public class TurnManager : MonoBehaviour
     {
         gameState = GameManager.Instance.gameState;
         gameState.ResetTurnData();
+        
+        // Actualizar qué mano mostrar
+        if (handManager != null)
+        {
+            handManager.UpdateActiveHand();
+        }
+        
         Debug.Log($"Turno de {gameState.activePlayer.playerName}");
     }
+    
     public void EndTurn()
     {
         Debug.Log("EndTurn llamado");
@@ -27,15 +35,25 @@ public class TurnManager : MonoBehaviour
             return;
         }
 
-        handDisplayUI.ClearSelection();
+        // Limpiar selecciones de todas las manos
+        if (handManager != null)
+        {
+            handManager.ClearAllSelections();
+        }
 
+        // Cambiar jugador activo
         gameState.SwapActivePlayer();
 
+        // Resetear datos de turno
         gameState.ResetTurnData();
 
-        Debug.Log($"Turno de {gameState.activePlayer.playerName}");
+        // Actualizar qué mano mostrar
+        if (handManager != null)
+        {
+            handManager.UpdateActiveHand();
+        }
 
-        //TODO: actualización de UI
+        Debug.Log($"Turno de {gameState.activePlayer.playerName}");
     }
 
     //Para carta especial que incrementa el número de cartas a jugar en un turno

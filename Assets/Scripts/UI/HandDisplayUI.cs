@@ -70,6 +70,12 @@ public class HandDisplayUI : MonoBehaviour
         // Limpiar slots y cartas existentes
         ClearHand();
         
+        // Si no hay cartas, no hacer nada
+        if (player.hand.cardsInHand.Count == 0)
+        {
+            return;
+        }
+        
         // Crear un slot por cada carta en la mano
         for (int i = 0; i < player.hand.cardsInHand.Count; i++)
         {
@@ -110,6 +116,9 @@ public class HandDisplayUI : MonoBehaviour
             cardVisuals.Add(cardVisual);
             slot.SetCard(cardVisual);
         }
+        
+        // Forzar actualización del layout
+        Canvas.ForceUpdateCanvases();
         
         // Esperar un frame para actualizar índices visuales
         StartCoroutine(UpdateVisualIndices());
@@ -259,16 +268,25 @@ public class HandDisplayUI : MonoBehaviour
     /// </summary>
     public void ClearSelection()
     {
+        Debug.Log($"ClearSelection llamado para {player.playerName}. Cartas seleccionadas: {selectedCards.Count}");
+        
         // Crear copia de la lista para evitar modificación durante iteración
         List<CardVisual> cardsToDeselect = new List<CardVisual>(selectedCards);
         
         foreach (CardVisual card in cardsToDeselect)
         {
-            card.Deselect();
-            ApplySelectionTint(card, false);
+            if (card != null)
+            {
+                card.Deselect();
+                ApplySelectionTint(card, false);
+            }
         }
         
         selectedCards.Clear();
+        
+        // Limpiar también la referencia de drag si existe
+        selectedCardForDrag = null;
+        hoveredCard = null;
     }
 
     #endregion
@@ -358,6 +376,36 @@ public class HandDisplayUI : MonoBehaviour
                 card.UpdateIndex(cardContainer.childCount);
             }
         }
+    }
+
+    #endregion
+
+    #region Public Control Methods
+
+    /// <summary>
+    /// Muestra la mano (activa el GameObject)
+    /// </summary>
+    public void ShowHand()
+    {
+        gameObject.SetActive(true);
+        RefreshHand();
+    }
+
+    /// <summary>
+    /// Oculta la mano (desactiva el GameObject)
+    /// </summary>
+    public void HideHand()
+    {
+        ClearSelection();
+        gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Fuerza un refresh completo de la mano
+    /// </summary>
+    public void ForceRefresh()
+    {
+        lastHandCount = -1; // Forzar refresh en próximo Update
     }
 
     #endregion

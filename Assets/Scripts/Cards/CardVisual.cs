@@ -15,6 +15,13 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public float hoverScale = 1.1f; // Escala al hacer hover
     public float animationDuration = 0.2f;
     
+    [Header("Drag Rotation Settings")]
+    [Range(0f, 50f)]
+    public float maxRotationAngle = 40f; // Ángulo máximo de rotación durante drag
+    [Range(0.1f, 5f)]
+    public float rotationSensitivity = 1f; // Sensibilidad de la rotación (ajustar al gusto: más alto = más dramático)
+    public float rotationSmoothSpeed = 10f; // Velocidad de suavizado (más alto = más suave)
+    
     [Header("State")]
     public bool selected = false;
     public Card cardData; // Referencia a la carta lógica (AttackCard, DefenseCard, etc.)
@@ -25,6 +32,11 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     private CanvasGroup canvasGroup;
     private Vector3 originalScale;
     private int visualIndex; // Índice visual en la mano (para animaciones)
+    
+    // Variables para rotación durante drag
+    private Vector2 lastDragPosition;
+    private float currentRotation = 0f;
+    private float targetRotation = 0f;
     
     // Events para comunicación con HandDisplayUI
     [HideInInspector] public UnityEvent<CardVisual> PointerEnterEvent = new UnityEvent<CardVisual>();
@@ -48,6 +60,20 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
         
         originalScale = transform.localScale;
+    }
+
+    void Update()
+    {
+        // Suavizar rotación durante el drag
+        if (isDragging)
+        {
+            // Decaer suavemente la rotación objetivo hacia 0 cuando no hay movimiento
+            targetRotation = Mathf.Lerp(targetRotation, 0f, Time.deltaTime * 5f);
+            
+            // Aplicar rotación actual con suavizado
+            currentRotation = Mathf.Lerp(currentRotation, targetRotation, Time.deltaTime * rotationSmoothSpeed);
+            rectTransform.localRotation = Quaternion.Euler(0, 0, currentRotation);
+        }
     }
 
     #region Event Handlers
@@ -93,6 +119,11 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         
         dragOffset = rectTransform.localPosition - new Vector3(localPoint.x, localPoint.y, 0);
         
+        // Inicializar tracking de rotación
+        lastDragPosition = eventData.position;
+        currentRotation = 0f;
+        targetRotation = 0f;
+        
         // Hacer la carta semi-transparente mientras se arrastra
         canvasGroup.alpha = 0.7f;
         canvasGroup.blocksRaycasts = false;
@@ -117,6 +148,16 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         );
         
         rectTransform.localPosition = new Vector3(localPoint.x, localPoint.y, 0) + dragOffset;
+        
+        // Calcular rotación basada en la velocidad horizontal
+        Vector2 dragDelta = eventData.position - lastDragPosition;
+        float horizontalVelocity = dragDelta.x;
+        
+        // Calcular rotación objetivo (positivo = derecha/horario, negativo = izquierda/antihorario)
+        targetRotation = Mathf.Clamp(-horizontalVelocity * rotationSensitivity, -maxRotationAngle, maxRotationAngle);
+        
+        // Guardar posición actual para próximo frame
+        lastDragPosition = eventData.position;
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -126,6 +167,10 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // Restaurar transparencia
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
+        
+        // Resetear rotación suavemente a 0
+        targetRotation = 0f;
+        transform.DORotate(Vector3.zero, animationDuration).SetEase(Ease.OutQuad);
         
         EndDragEvent?.Invoke(this);
     }
