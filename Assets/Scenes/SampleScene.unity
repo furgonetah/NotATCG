@@ -289,7 +289,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 621, y: 374}
+  m_AnchoredPosition: {x: 744, y: 55}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &105069893
@@ -328,7 +328,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 272, y: 359}
+  m_AnchoredPosition: {x: 6, y: 433}
   m_SizeDelta: {x: -931.631, y: -941.2983}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &105069895
@@ -830,8 +830,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1164, y: -41}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -843, y: -81}
+  m_SizeDelta: {x: 360, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &366648761
 MonoBehaviour:
@@ -962,26 +962,26 @@ MonoBehaviour:
   - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
   - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
   - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
-  - {fileID: 6318264254656808801, guid: d3649fd78e8ae8846bce4508431f9c4b, type: 3}
+  - {fileID: 6318264254656808801, guid: aee9fc0fcabec8c40b1b6a7209e35e63, type: 3}
+  - {fileID: 6318264254656808801, guid: aee9fc0fcabec8c40b1b6a7209e35e63, type: 3}
+  - {fileID: 6318264254656808801, guid: aee9fc0fcabec8c40b1b6a7209e35e63, type: 3}
+  - {fileID: 6318264254656808801, guid: aee9fc0fcabec8c40b1b6a7209e35e63, type: 3}
+  - {fileID: 6318264254656808801, guid: aee9fc0fcabec8c40b1b6a7209e35e63, type: 3}
+  - {fileID: 6318264254656808801, guid: aee9fc0fcabec8c40b1b6a7209e35e63, type: 3}
+  - {fileID: 6318264254656808801, guid: 69bfcf33471ba5849a9baa62b679a99b, type: 3}
+  - {fileID: 6318264254656808801, guid: 69bfcf33471ba5849a9baa62b679a99b, type: 3}
+  - {fileID: 6318264254656808801, guid: 69bfcf33471ba5849a9baa62b679a99b, type: 3}
+  - {fileID: 6318264254656808801, guid: 69bfcf33471ba5849a9baa62b679a99b, type: 3}
+  - {fileID: 6318264254656808801, guid: 69bfcf33471ba5849a9baa62b679a99b, type: 3}
+  - {fileID: 6318264254656808801, guid: 1096da9a97bbad447a382339e6ca687d, type: 3}
+  - {fileID: 6318264254656808801, guid: 1096da9a97bbad447a382339e6ca687d, type: 3}
+  - {fileID: 6318264254656808801, guid: 1096da9a97bbad447a382339e6ca687d, type: 3}
+  - {fileID: 6318264254656808801, guid: 1096da9a97bbad447a382339e6ca687d, type: 3}
+  - {fileID: 6318264254656808801, guid: 08f5962a1d131684cb129b4ea99ebd7c, type: 3}
+  - {fileID: 6318264254656808801, guid: 08f5962a1d131684cb129b4ea99ebd7c, type: 3}
+  - {fileID: 6318264254656808801, guid: 08f5962a1d131684cb129b4ea99ebd7c, type: 3}
+  - {fileID: 6318264254656808801, guid: 08f5962a1d131684cb129b4ea99ebd7c, type: 3}
+  - {fileID: 6318264254656808801, guid: a6499eff88d213c4cb19d7d15119cc86, type: 3}
 --- !u!4 &502346089
 Transform:
   m_ObjectHideFlags: 0
@@ -1798,7 +1798,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 272, y: -470.64917}
+  m_AnchoredPosition: {x: 3, y: -470.64917}
   m_SizeDelta: {x: -931.631, y: -941.2983}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &732796360
@@ -2348,7 +2348,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -852, y: 470}
+  m_AnchoredPosition: {x: -1062, y: 470}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1482138340
@@ -2830,7 +2830,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 630, y: 71}
+  m_AnchoredPosition: {x: 911, y: -269}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1965329085

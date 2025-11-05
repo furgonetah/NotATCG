@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8494972059673353475}
   - component: {fileID: 6318264254656808801}
   m_Layer: 0
-  m_Name: CardSample
+  m_Name: FireHazard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,10 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a77ee0ec028c84f835a005a4469d1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardName: Fireball
+  cardName: Fire Hazard
   cardType: 0
-  cardDescription: "Inflinge 20 puntos de da\xF1o"
+  cardDescription: "Inflinge 50 puntos de da\xF1o"
   cardArt: {fileID: 0}
   isPercentageDamage: 0
-  flatDamage: 20
+  flatDamage: 50
   percentageDamage: 0
