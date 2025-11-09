@@ -91,11 +91,13 @@ public class HandDisplayUI : MonoBehaviour
             Card cardData = player.hand.cardsInHand[i];
             cardVisual.cardData = cardData;
             
-            // Configurar texto de la carta
+            // Configurar texto de la carta CON DESCRIPCIÓN DINÁMICA
             TextMeshProUGUI cardText = cardObj.GetComponentInChildren<TextMeshProUGUI>();
             if (cardText != null)
             {
-                cardText.text = $"{cardData.cardName}\n{cardData.cardDescription}";
+                // Usar descripción dinámica con placeholders
+                string description = cardData.GetDynamicDescription(null); // null = sin modificadores aún
+                cardText.text = $"{cardData.cardName}\n{description}";
             }
             
             // Configurar imagen de fondo si existe
@@ -230,6 +232,9 @@ public class HandDisplayUI : MonoBehaviour
         cardVisual.Select();
         ApplySelectionTint(cardVisual, true);
         
+        // Actualizar descripción con modificadores activos
+        UpdateCardDescriptionWithModifiers(cardVisual);
+        
         Debug.Log($"Carta seleccionada: {cardVisual.cardData.cardName}");
     }
 
@@ -248,7 +253,41 @@ public class HandDisplayUI : MonoBehaviour
         cardVisual.Deselect();
         ApplySelectionTint(cardVisual, false);
         
+        // Restaurar descripción base (sin modificadores)
+        UpdateCardDescriptionBase(cardVisual);
+        
         Debug.Log($"Carta deseleccionada: {cardVisual.cardData.cardName}");
+    }
+    
+    /// <summary>
+    /// Actualiza la descripción de la carta mostrando valores con modificadores activos
+    /// </summary>
+    void UpdateCardDescriptionWithModifiers(CardVisual cardVisual)
+    {
+        if (cardVisual.cardData == null || player == null)
+            return;
+            
+        // Obtener descripción con modificadores activos del jugador
+        string modifiedDescription = cardVisual.cardData.GetDynamicDescription(player.activeModifiers);
+        cardVisual.UpdateDescription(modifiedDescription);
+        
+        if (player.activeModifiers.Count > 0)
+        {
+            Debug.Log($"Descripción actualizada con modificadores: {modifiedDescription}");
+        }
+    }
+    
+    /// <summary>
+    /// Restaura la descripción base de la carta (sin modificadores)
+    /// </summary>
+    void UpdateCardDescriptionBase(CardVisual cardVisual)
+    {
+        if (cardVisual.cardData == null)
+            return;
+            
+        // Obtener descripción base sin modificadores
+        string baseDescription = cardVisual.cardData.GetDynamicDescription(null);
+        cardVisual.UpdateDescription(baseDescription);
     }
 
     /// <summary>
@@ -344,7 +383,7 @@ public class HandDisplayUI : MonoBehaviour
         Transform draggedParent = selectedCardForDrag.transform.parent;
         Transform targetParent = cardVisuals[targetIndex].transform.parent;
 
-        // Intercambiar parents
+        // Intercambiar parents (orden visual)
         cardVisuals[targetIndex].transform.SetParent(draggedParent);
         cardVisuals[targetIndex].transform.localPosition = cardVisuals[targetIndex].selected 
             ? new Vector3(0, cardVisuals[targetIndex].selectionOffset, 0) 
@@ -358,6 +397,9 @@ public class HandDisplayUI : MonoBehaviour
         
         draggedSlot.SetCard(cardVisuals[targetIndex]);
         targetSlot.SetCard(selectedCardForDrag);
+
+        // NUEVO: Sincronizar con player.hand.cardsInHand
+        SyncHandOrderWithVisuals();
 
         isCrossing = false;
 
@@ -376,6 +418,36 @@ public class HandDisplayUI : MonoBehaviour
                 card.UpdateIndex(cardContainer.childCount);
             }
         }
+    }
+    
+    /// <summary>
+    /// Sincroniza el orden de player.hand.cardsInHand con el orden visual de las cartas
+    /// </summary>
+    void SyncHandOrderWithVisuals()
+    {
+        if (player == null || player.hand == null)
+            return;
+        
+        // Crear nueva lista ordenada según la jerarquía visual
+        List<Card> newOrder = new List<Card>();
+        
+        // Iterar por los slots en orden (de izquierda a derecha)
+        for (int i = 0; i < cardContainer.childCount; i++)
+        {
+            Transform slotTransform = cardContainer.GetChild(i);
+            CardSlot slot = slotTransform.GetComponent<CardSlot>();
+            
+            if (slot != null && slot.cardInSlot != null && slot.cardInSlot.cardData != null)
+            {
+                newOrder.Add(slot.cardInSlot.cardData);
+            }
+        }
+        
+        // Reemplazar la lista de cartas en la mano del jugador
+        player.hand.cardsInHand.Clear();
+        player.hand.cardsInHand.AddRange(newOrder);
+        
+        Debug.Log($"Orden de mano sincronizado: {newOrder.Count} cartas");
     }
 
     #endregion

@@ -46,8 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Fire Hazard
   cardType: 0
-  cardDescription: "Inflinge 50 puntos de da\xF1o"
+  cardDescriptionTemplate: "Inlige {damage} puntos de da\xF1o."
   cardArt: {fileID: 0}
+  currentDescription: 
   isPercentageDamage: 0
   flatDamage: 50
   percentageDamage: 0

@@ -198,6 +198,18 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         transform.DOLocalMove(Vector3.zero, animationDuration).SetEase(Ease.OutQuad);
     }
     
+    /// <summary>
+    /// Actualiza la descripción de la carta en el UI
+    /// </summary>
+    public void UpdateDescription(string newDescription)
+    {
+        TMPro.TextMeshProUGUI cardText = GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        if (cardText != null && cardData != null)
+        {
+            cardText.text = $"{cardData.cardName}\n{newDescription}";
+        }
+    }
+    
     #endregion
 
     #region Visual Organization Methods

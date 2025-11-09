@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Player : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class Player : MonoBehaviour
 
     [Header("Stats")]
     public int roundsWon = 0;
+    
+    [Header("Card Modifiers")]
+    public List<CardModifier> activeModifiers = new List<CardModifier>(); // Modificadores activos
+    
     private GameState gameState;
 
 
@@ -24,6 +29,7 @@ public class Player : MonoBehaviour
         currentHP = maxHP;
         gameState = GameManager.Instance.gameState;
     }
+    
     public void TakeDamage(int amount)
     {
         currentHP -= amount;
@@ -104,6 +110,7 @@ public class Player : MonoBehaviour
             }
         }
     }
+    
     public void DrawCards(int amount)
     {
         for (int i = 0; i < amount; i++)
@@ -123,6 +130,6 @@ public class Player : MonoBehaviour
     public void ResetForNewRound()
     {
         currentHP = maxHP;
+        activeModifiers.Clear(); // Limpiar modificadores al empezar nueva ronda
     }
-
 }

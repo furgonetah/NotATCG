@@ -701,6 +701,7 @@ MonoBehaviour:
   hand: {fileID: 151123221}
   deck: {fileID: 502346088}
   roundsWon: 0
+  activeModifiers: []
 --- !u!4 &352299484
 Transform:
   m_ObjectHideFlags: 0
@@ -2488,6 +2489,7 @@ MonoBehaviour:
   hand: {fileID: 178701232}
   deck: {fileID: 1316705263}
   roundsWon: 0
+  activeModifiers: []
 --- !u!4 &1512728001
 Transform:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public abstract class SpecialCard : Card
 {
@@ -7,6 +8,9 @@ public abstract class SpecialCard : Card
     
     public override void Play(Player caster, Player target)
     {
+        // Aplicar modificadores antes de ejecutar
+        ApplyModifiersToCard(caster);
+        
         ExecuteSpecialEffect(caster, target);
     }
     
@@ -14,19 +18,53 @@ public abstract class SpecialCard : Card
     protected abstract void ExecuteSpecialEffect(Player caster, Player target);
 }
 
-// EJEMPLO de carta especial concreta (puedes crear más así):
+// ==========================================
+// EJEMPLO: Carta que roba cartas
+// ==========================================
 public class DrawCardsSpecial : SpecialCard
 {
     [Header("Draw Effect")]
     public int cardsToDraw = 2;
     
+    // Valor modificado
+    private int modifiedCardsToDraw;
+    
     protected override void ExecuteSpecialEffect(Player caster, Player target)
     {
-        caster.DrawCards(cardsToDraw);
-        Debug.Log($"{cardName}: {caster.playerName} roba {cardsToDraw} cartas");
+        // Usar valor modificado si existe
+        int finalCards = modifiedCardsToDraw > 0 ? modifiedCardsToDraw : cardsToDraw;
+        caster.DrawCards(finalCards);
+        Debug.Log($"{cardName}: {caster.playerName} roba {finalCards} cartas");
+        
+        // Resetear
+        modifiedCardsToDraw = 0;
+    }
+    
+    protected override Dictionary<string, string> GetCardValues()
+    {
+        Dictionary<string, string> values = new Dictionary<string, string>();
+        values["cards"] = cardsToDraw.ToString();
+        return values;
+    }
+    
+    protected override void ApplyModifiersToSelf(List<CardModifier> modifiers)
+    {
+        modifiedCardsToDraw = cardsToDraw;
+        
+        foreach (CardModifier mod in modifiers)
+        {
+            if (mod.type == ModifierType.MultiplyAllValues || mod.type == ModifierType.MultiplyCardDraw)
+            {
+                modifiedCardsToDraw = Mathf.RoundToInt(modifiedCardsToDraw * mod.multiplier);
+                Debug.Log($"Modificador '{mod.modifierName}' aplicado: cartas {cardsToDraw} → {modifiedCardsToDraw}");
+            }
+        }
     }
 }
 
+// ==========================================
+// EJEMPLO: Carta que aumenta límite de cartas por turno
+// ==========================================
 public class IncreaseCardLimitSpecial : SpecialCard
 {
     [Header("Card Limit Effect")]
@@ -36,5 +74,79 @@ public class IncreaseCardLimitSpecial : SpecialCard
     {
         GameManager.Instance.turnManager.ModifyCardsPerTurn(additionalCards);
         Debug.Log($"{cardName}: Límite de cartas aumentado en {additionalCards}");
+    }
+    
+    protected override Dictionary<string, string> GetCardValues()
+    {
+        Dictionary<string, string> values = new Dictionary<string, string>();
+        values["cards"] = additionalCards.ToString();
+        return values;
+    }
+}
+
+// ==========================================
+// NUEVA: Carta que duplica la siguiente carta
+// ==========================================
+public class DoubleNextCardSpecial : SpecialCard
+{
+    [Header("Double Effect")]
+    public float multiplier = 2f; // 2x = duplicar
+    
+    protected override void ExecuteSpecialEffect(Player caster, Player target)
+    {
+        // Crear modificador que dura 1 carta
+        CardModifier doubleModifier = new CardModifier(
+            "Duplicar Valores",
+            ModifierType.MultiplyAllValues,
+            multiplier,
+            0,
+            1 // Solo afecta a la siguiente carta
+        );
+        
+        doubleModifier.owner = caster;
+        
+        // Añadir al jugador
+        caster.activeModifiers.Add(doubleModifier);
+        
+        Debug.Log($"{cardName}: La siguiente carta de {caster.playerName} tendrá valores duplicados");
+    }
+    
+    protected override Dictionary<string, string> GetCardValues()
+    {
+        Dictionary<string, string> values = new Dictionary<string, string>();
+        values["multiplier"] = multiplier.ToString("F0"); // "2" en lugar de "2.0"
+        return values;
+    }
+}
+
+// ==========================================
+// NUEVA: Carta que añade daño fijo a la siguiente carta de ataque
+// ==========================================
+public class AddDamageNextCardSpecial : SpecialCard
+{
+    [Header("Damage Boost")]
+    public int bonusDamage = 10;
+    
+    protected override void ExecuteSpecialEffect(Player caster, Player target)
+    {
+        CardModifier damageModifier = new CardModifier(
+            "Bonus de Daño",
+            ModifierType.AddFlatDamage,
+            1f,
+            bonusDamage,
+            1
+        );
+        
+        damageModifier.owner = caster;
+        caster.activeModifiers.Add(damageModifier);
+        
+        Debug.Log($"{cardName}: La siguiente carta de ataque de {caster.playerName} hará +{bonusDamage} daño");
+    }
+    
+    protected override Dictionary<string, string> GetCardValues()
+    {
+        Dictionary<string, string> values = new Dictionary<string, string>();
+        values["damage"] = bonusDamage.ToString();
+        return values;
     }
 }
