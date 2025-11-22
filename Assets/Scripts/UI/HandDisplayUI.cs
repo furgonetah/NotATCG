@@ -91,8 +91,9 @@ public class HandDisplayUI : MonoBehaviour
             Card cardData = player.hand.cardsInHand[i];
             cardVisual.cardData = cardData;
 
-            // Actualizar icono de tipo
+            // Actualizar icono de tipo y arte conceptual
             cardVisual.UpdateTypeIcon();
+            cardVisual.UpdateCardArt();
 
             // Configurar los 3 componentes de texto por separado
             TextMeshProUGUI titleText = cardObj.transform.Find("TitleText")?.GetComponent<TextMeshProUGUI>();
@@ -118,14 +119,7 @@ public class HandDisplayUI : MonoBehaviour
                 string numericValue = ExtractNumericValue(cardData);
                 numberText.text = numericValue;
             }
-            
-            // Configurar imagen de fondo si existe
-            Image cardImage = cardObj.GetComponent<Image>();
-            if (cardImage != null && cardData.cardArt != null)
-            {
-                cardImage.sprite = cardData.cardArt;
-            }
-            
+
             // Suscribir eventos
             cardVisual.PointerEnterEvent.AddListener(OnCardPointerEnter);
             cardVisual.PointerExitEvent.AddListener(OnCardPointerExit);

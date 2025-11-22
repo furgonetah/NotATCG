@@ -270,6 +270,34 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 break;
         }
     }
+
+    /// <summary>
+    /// Actualiza el arte conceptual de la carta individual
+    /// </summary>
+    public void UpdateCardArt()
+    {
+        if (cardData == null) return;
+
+        Transform cardArtTransform = transform.Find("CardArtwork");
+        if (cardArtTransform == null)
+        {
+            Debug.LogWarning("No se encontró CardArtwork en el prefab CardVisual. Añade un hijo Image llamado 'CardArtwork' al prefab.");
+            return;
+        }
+
+        UnityEngine.UI.Image artImage = cardArtTransform.GetComponent<UnityEngine.UI.Image>();
+        if (artImage == null)
+        {
+            Debug.LogWarning("CardArtwork no tiene componente Image");
+            return;
+        }
+
+        // Asignar el sprite único de esta carta
+        if (cardData.cardArt != null)
+        {
+            artImage.sprite = cardData.cardArt;
+        }
+    }
     
     #endregion
 
