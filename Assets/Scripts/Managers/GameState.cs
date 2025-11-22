@@ -15,19 +15,12 @@ public class GameState
     public bool playerDrewCardThisTurn;
     public int cardsPlayedThisTurn;
 
-    // TODO: TUTORIAL
-    public bool isTutorialActive = false;
-    public int tutorialStep = 0;
-
     // TODO: Todo lo referente al tiempo, especificado en GameManager
     public float timeRemaining;
     public bool isTimerActive = false;
 
     public bool playerDiedThisTurn = false;
     public Player deadPlayer = null;
-
-    // Trampas activas
-    public System.Collections.Generic.List<Card> activeTraps = new System.Collections.Generic.List<Card>();
 
     public GameState()
     {
@@ -64,6 +57,5 @@ public enum GamePhase
     Setup,
     Playing,
     RoundEnd,
-    GameEnd,
-    Tutorial
+    GameEnd
 }

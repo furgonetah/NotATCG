@@ -18,21 +18,6 @@ public abstract class Card : MonoBehaviour
     public string currentDescription;
     
     public abstract void Play(Player caster, Player target);
-
-    public virtual bool CheckTrapCondition(GameState state)
-    {
-        return false;
-    }
-    
-    public virtual Player ModifyTarget(Player originalCaster, Player originalTarget)
-    {
-        return originalTarget;
-    }
-    
-    public virtual void OnTrapActivate(Player caster, Player target)
-    {
-        // Override en TrapCard
-    }
     
     /// <summary>
     /// Genera la descripción de la carta reemplazando placeholders con valores reales.
@@ -200,6 +185,5 @@ public enum CardType
 {
     Attack,
     Defense,
-    Special,
-    Trap
+    Special
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 public class Hand : MonoBehaviour
 {
     public List<Card> cardsInHand = new List<Card>();
-    public int maxHandSize = 10;
+    public int maxHandSize = GameConstants.HAND_MAX_SIZE;
     
     public void AddCard(Card card)
     {

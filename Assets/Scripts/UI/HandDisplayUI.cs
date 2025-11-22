@@ -90,14 +90,33 @@ public class HandDisplayUI : MonoBehaviour
             // Configurar datos de la carta
             Card cardData = player.hand.cardsInHand[i];
             cardVisual.cardData = cardData;
-            
-            // Configurar texto de la carta CON DESCRIPCIÓN DINÁMICA
-            TextMeshProUGUI cardText = cardObj.GetComponentInChildren<TextMeshProUGUI>();
-            if (cardText != null)
+
+            // Actualizar icono de tipo
+            cardVisual.UpdateTypeIcon();
+
+            // Configurar los 3 componentes de texto por separado
+            TextMeshProUGUI titleText = cardObj.transform.Find("TitleText")?.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI descriptionText = cardObj.transform.Find("DescriptionText")?.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI numberText = cardObj.transform.Find("NumberText")?.GetComponent<TextMeshProUGUI>();
+
+            // Configurar título
+            if (titleText != null)
             {
-                // Usar descripción dinámica con placeholders
+                titleText.text = cardData.cardName;
+            }
+
+            // Configurar descripción dinámica con placeholders reemplazados
+            if (descriptionText != null)
+            {
                 string description = cardData.GetDynamicDescription(null); // null = sin modificadores aún
-                cardText.text = $"{cardData.cardName}\n{description}";
+                descriptionText.text = description;
+            }
+
+            // Configurar valor numérico
+            if (numberText != null)
+            {
+                string numericValue = ExtractNumericValue(cardData);
+                numberText.text = numericValue;
             }
             
             // Configurar imagen de fondo si existe
@@ -478,6 +497,35 @@ public class HandDisplayUI : MonoBehaviour
     public void ForceRefresh()
     {
         lastHandCount = -1; // Forzar refresh en próximo Update
+    }
+
+    #endregion
+
+    #region Helper Methods
+
+    /// <summary>
+    /// Extrae el valor numérico de una carta para mostrarlo en NumberText
+    /// </summary>
+    string ExtractNumericValue(Card card)
+    {
+        if (card is AttackCard attackCard)
+        {
+            return attackCard.isPercentageDamage
+                ? $"{attackCard.percentageDamage * 100:F0}%"
+                : attackCard.flatDamage.ToString();
+        }
+        else if (card is DefenseCard defenseCard)
+        {
+            return defenseCard.isPercentageHealing
+                ? $"{defenseCard.percentageHealing * 100:F0}%"
+                : defenseCard.flatHealing.ToString();
+        }
+        else if (card is DrawCardsSpecial drawCard)
+        {
+            return drawCard.cardsToDraw.ToString();
+        }
+
+        return "?";
     }
 
     #endregion

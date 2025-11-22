@@ -20,7 +20,7 @@ public class AttackCard : Card
     {
         // Aplicar modificadores activos antes de ejecutar
         ApplyModifiersToCard(caster);
-        
+
         if (isPercentageDamage)
         {
             target.TakeDamagePercentage(percentageDamage);
@@ -28,12 +28,11 @@ public class AttackCard : Card
         }
         else
         {
-            // Usar valor modificado si existe
-            int finalDamage = modifiedDamage > 0 ? modifiedDamage : flatDamage;
+            int finalDamage = ModifierApplicationHelper.GetFinalValue(modifiedDamage, flatDamage);
             target.TakeDamage(finalDamage);
             Debug.Log($"{cardName} inflige {finalDamage} de daño a {target.playerName}");
         }
-        
+
         // Resetear valores modificados
         modifiedDamage = 0;
     }
@@ -62,23 +61,13 @@ public class AttackCard : Card
     /// </summary>
     protected override void ApplyModifiersToSelf(List<CardModifier> modifiers)
     {
-        modifiedDamage = flatDamage; // Empezar con valor base
-        
-        foreach (CardModifier mod in modifiers)
-        {
-            switch (mod.type)
-            {
-                case ModifierType.MultiplyAllValues:
-                case ModifierType.MultiplyDamage:
-                    modifiedDamage = Mathf.RoundToInt(modifiedDamage * mod.multiplier);
-                    Debug.Log($"Modificador '{mod.modifierName}' aplicado: daño {flatDamage} → {modifiedDamage}");
-                    break;
-                    
-                case ModifierType.AddFlatDamage:
-                    modifiedDamage += mod.flatBonus;
-                    Debug.Log($"Modificador '{mod.modifierName}' aplicado: daño +{mod.flatBonus} = {modifiedDamage}");
-                    break;
-            }
-        }
+        modifiedDamage = ModifierApplicationHelper.ApplyModifiers(
+            flatDamage,
+            modifiers,
+            ModifierType.MultiplyDamage,
+            ModifierType.AddFlatDamage,
+            cardName,
+            "daño"
+        );
     }
 }

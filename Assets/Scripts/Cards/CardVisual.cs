@@ -11,17 +11,22 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                            IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
     [Header("Visual Settings")]
-    public float selectionOffset = 50f; // Cuánto sube la carta al seleccionarla
-    public float hoverScale = 1.1f; // Escala al hacer hover
-    public float animationDuration = 0.2f;
+    public float selectionOffset = GameConstants.CARD_SELECTION_OFFSET; // Cuánto sube la carta al seleccionarla
+    public float hoverScale = GameConstants.CARD_HOVER_SCALE; // Escala al hacer hover
+    public float animationDuration = GameConstants.CARD_ANIMATION_DURATION;
     
     [Header("Drag Rotation Settings")]
     [Range(0f, 50f)]
-    public float maxRotationAngle = 40f; // Ángulo máximo de rotación durante drag
+    public float maxRotationAngle = GameConstants.CARD_MAX_ROTATION_ANGLE; // Ángulo máximo de rotación durante drag
     [Range(0.1f, 5f)]
-    public float rotationSensitivity = 1f; // Sensibilidad de la rotación (ajustar al gusto: más alto = más dramático)
-    public float rotationSmoothSpeed = 10f; // Velocidad de suavizado (más alto = más suave)
+    public float rotationSensitivity = GameConstants.CARD_ROTATION_SENSITIVITY; // Sensibilidad de la rotación (ajustar al gusto: más alto = más dramático)
+    public float rotationSmoothSpeed = GameConstants.CARD_ROTATION_SMOOTH_SPEED; // Velocidad de suavizado (más alto = más suave)
     
+    [Header("Type Icons")]
+    public Sprite attackIcon;
+    public Sprite defenseIcon;
+    public Sprite specialIcon;
+
     [Header("State")]
     public bool selected = false;
     public Card cardData; // Referencia a la carta lógica (AttackCard, DefenseCard, etc.)
@@ -68,8 +73,8 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (isDragging)
         {
             // Decaer suavemente la rotación objetivo hacia 0 cuando no hay movimiento
-            targetRotation = Mathf.Lerp(targetRotation, 0f, Time.deltaTime * 5f);
-            
+            targetRotation = Mathf.Lerp(targetRotation, 0f, Time.deltaTime * GameConstants.CARD_ROTATION_DECAY_SPEED);
+
             // Aplicar rotación actual con suavizado
             currentRotation = Mathf.Lerp(currentRotation, targetRotation, Time.deltaTime * rotationSmoothSpeed);
             rectTransform.localRotation = Quaternion.Euler(0, 0, currentRotation);
@@ -125,7 +130,7 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         targetRotation = 0f;
         
         // Hacer la carta semi-transparente mientras se arrastra
-        canvasGroup.alpha = 0.7f;
+        canvasGroup.alpha = GameConstants.CARD_DRAG_ALPHA;
         canvasGroup.blocksRaycasts = false;
         
         // Escalar a tamaño normal si estaba con hover
@@ -203,10 +208,66 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     /// </summary>
     public void UpdateDescription(string newDescription)
     {
-        TMPro.TextMeshProUGUI cardText = GetComponentInChildren<TMPro.TextMeshProUGUI>();
-        if (cardText != null && cardData != null)
+        // Buscar los 3 componentes de texto
+        TMPro.TextMeshProUGUI titleText = transform.Find("TitleText")?.GetComponent<TMPro.TextMeshProUGUI>();
+        TMPro.TextMeshProUGUI descriptionText = transform.Find("DescriptionText")?.GetComponent<TMPro.TextMeshProUGUI>();
+        TMPro.TextMeshProUGUI numberText = transform.Find("NumberText")?.GetComponent<TMPro.TextMeshProUGUI>();
+
+        // Actualizar título
+        if (titleText != null && cardData != null)
         {
-            cardText.text = $"{cardData.cardName}\n{newDescription}";
+            titleText.text = cardData.cardName;
+        }
+
+        // Actualizar descripción
+        if (descriptionText != null)
+        {
+            descriptionText.text = newDescription;
+        }
+
+        // Actualizar valor numérico
+        if (numberText != null && cardData != null)
+        {
+            string numericValue = ExtractNumericValue(cardData);
+            numberText.text = numericValue;
+        }
+
+        // Actualizar icono de tipo
+        UpdateTypeIcon();
+    }
+
+    /// <summary>
+    /// Actualiza el icono de tipo de carta según CardType
+    /// </summary>
+    public void UpdateTypeIcon()
+    {
+        if (cardData == null) return;
+
+        Transform typeIconTransform = transform.Find("TypeBadge/TypeIcon");
+        if (typeIconTransform == null)
+        {
+            Debug.LogWarning("No se encontró TypeBadge/TypeIcon en el prefab CardVisual");
+            return;
+        }
+
+        UnityEngine.UI.Image iconImage = typeIconTransform.GetComponent<UnityEngine.UI.Image>();
+        if (iconImage == null)
+        {
+            Debug.LogWarning("TypeIcon no tiene componente Image");
+            return;
+        }
+
+        switch (cardData.cardType)
+        {
+            case CardType.Attack:
+                iconImage.sprite = attackIcon;
+                break;
+            case CardType.Defense:
+                iconImage.sprite = defenseIcon;
+                break;
+            case CardType.Special:
+                iconImage.sprite = specialIcon;
+                break;
         }
     }
     
@@ -236,12 +297,12 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void Swap(int direction)
     {
         // Pequeña animación de "bounce" al intercambiar
-        Vector3 offset = new Vector3(direction * 10f, 0, 0);
-        transform.DOLocalMove(transform.localPosition + offset, 0.1f)
+        Vector3 offset = new Vector3(direction * GameConstants.CARD_SWAP_OFFSET, 0, 0);
+        transform.DOLocalMove(transform.localPosition + offset, GameConstants.CARD_SWAP_ANIMATION_DURATION)
             .SetEase(Ease.OutQuad)
-            .OnComplete(() => 
+            .OnComplete(() =>
             {
-                transform.DOLocalMove(selected ? new Vector3(0, selectionOffset, 0) : Vector3.zero, 0.1f)
+                transform.DOLocalMove(selected ? new Vector3(0, selectionOffset, 0) : Vector3.zero, GameConstants.CARD_SWAP_ANIMATION_DURATION)
                     .SetEase(Ease.InQuad);
             });
     }
@@ -254,7 +315,7 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void ReturnToPosition(bool useTween = true)
     {
         Vector3 targetPos = selected ? new Vector3(0, selectionOffset, 0) : Vector3.zero;
-        
+
         if (useTween)
         {
             transform.DOLocalMove(targetPos, animationDuration).SetEase(Ease.OutBack);
@@ -263,5 +324,30 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             transform.localPosition = targetPos;
         }
+    }
+
+    /// <summary>
+    /// Extrae el valor numérico de una carta para mostrarlo en NumberText
+    /// </summary>
+    string ExtractNumericValue(Card card)
+    {
+        if (card is AttackCard attackCard)
+        {
+            return attackCard.isPercentageDamage
+                ? $"{attackCard.percentageDamage * 100:F0}%"
+                : attackCard.flatDamage.ToString();
+        }
+        else if (card is DefenseCard defenseCard)
+        {
+            return defenseCard.isPercentageHealing
+                ? $"{defenseCard.percentageHealing * 100:F0}%"
+                : defenseCard.flatHealing.ToString();
+        }
+        else if (card is DrawCardsSpecial drawCard)
+        {
+            return drawCard.cardsToDraw.ToString();
+        }
+
+        return "?";
     }
 }

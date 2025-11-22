@@ -585,6 +585,9 @@ MonoBehaviour:
   maxRotationAngle: 50
   rotationSensitivity: 5
   rotationSmoothSpeed: 20
+  attackIcon: {fileID: -8136253939929338480, guid: 76cd1ccee7ea94b45b7b74b78e7d66ad, type: 3}
+  defenseIcon: {fileID: 473728356293506998, guid: cee065444be18474e92ff4209386ee6c, type: 3}
+  specialIcon: {fileID: 1647023187271393410, guid: 926509b99dbcccb4a8a18926904a7f56, type: 3}
   selected: 0
   cardData: {fileID: 0}
   PointerEnterEvent:

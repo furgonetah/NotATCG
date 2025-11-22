@@ -20,20 +20,19 @@ public class DefenseCard : Card
     {
         // Aplicar modificadores activos antes de ejecutar
         ApplyModifiersToCard(caster);
-        
+
         if (isPercentageHealing)
         {
-            target.HealPercentage(percentageHealing);
-            Debug.Log($"{cardName} cura {percentageHealing * 100}% HP a {target.playerName}");
+            caster.HealPercentage(percentageHealing);
+            Debug.Log($"{cardName} cura {percentageHealing * 100}% HP a {caster.playerName}");
         }
         else
         {
-            // Usar valor modificado si existe
-            int finalHealing = modifiedHealing > 0 ? modifiedHealing : flatHealing;
-            target.Heal(finalHealing);
-            Debug.Log($"{cardName} cura {finalHealing} HP a {target.playerName}");
+            int finalHealing = ModifierApplicationHelper.GetFinalValue(modifiedHealing, flatHealing);
+            caster.Heal(finalHealing);
+            Debug.Log($"{cardName} cura {finalHealing} HP a {caster.playerName}");
         }
-        
+
         // Resetear valores modificados
         modifiedHealing = 0;
     }
@@ -62,23 +61,13 @@ public class DefenseCard : Card
     /// </summary>
     protected override void ApplyModifiersToSelf(List<CardModifier> modifiers)
     {
-        modifiedHealing = flatHealing;
-        
-        foreach (CardModifier mod in modifiers)
-        {
-            switch (mod.type)
-            {
-                case ModifierType.MultiplyAllValues:
-                case ModifierType.MultiplyHealing:
-                    modifiedHealing = Mathf.RoundToInt(modifiedHealing * mod.multiplier);
-                    Debug.Log($"Modificador '{mod.modifierName}' aplicado: curación {flatHealing} → {modifiedHealing}");
-                    break;
-                    
-                case ModifierType.AddFlatHealing:
-                    modifiedHealing += mod.flatBonus;
-                    Debug.Log($"Modificador '{mod.modifierName}' aplicado: curación +{mod.flatBonus} = {modifiedHealing}");
-                    break;
-            }
-        }
+        modifiedHealing = ModifierApplicationHelper.ApplyModifiers(
+            flatHealing,
+            modifiers,
+            ModifierType.MultiplyHealing,
+            ModifierType.AddFlatHealing,
+            cardName,
+            "curación"
+        );
     }
 }

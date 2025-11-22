@@ -4,7 +4,7 @@ using UnityEngine;
 public class CardQueue : MonoBehaviour
 {
     private List<Card> queuedCards = new List<Card>();
-    private int maxCardsPerTurn = 2;
+    private int maxCardsPerTurn = GameConstants.CARDS_PER_TURN;
 
     public bool CanAddCard()
     {
@@ -37,24 +37,14 @@ public class CardQueue : MonoBehaviour
             Debug.Log("Turno finalizado sin jugar cartas.");
             return;
         }
+
         foreach (Card card in queuedCards)
         {
-            //Chequeamos si hay trampas activas que modifiquen el target
-            Player finalTarget = CheckTrapsAndModifyTarget(caster, target, card);
-
-            card.Play(caster, finalTarget);
-
+            card.Play(caster, target);
             caster.hand.RemoveCard(card);
         }
 
         ClearQueue();
-    }
-
-    private Player CheckTrapsAndModifyTarget(Player caster, Player target, Card cardBeingPlayed)
-    {
-        // Iteración como tal de las trampas
-        // TODO: TrapManager
-        return target;
     }
 
     public void ModifyMaxCardsThisTurn(int amount)

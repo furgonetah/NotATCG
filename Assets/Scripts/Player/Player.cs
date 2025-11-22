@@ -8,8 +8,8 @@ public class Player : MonoBehaviour
     public bool isAI = false; //para tutorial si da tiempo
 
     [Header("Health")]
-    public int maxHP = 100;
-    public int currentHP = 100;
+    public int maxHP = GameConstants.PLAYER_MAX_HP;
+    public int currentHP = GameConstants.PLAYER_MAX_HP;
 
     [Header("Components")]
     public Hand hand;
@@ -81,9 +81,9 @@ public class Player : MonoBehaviour
 
         if (hand.IsEmpty() && gameState != null && gameState.cardsPlayedThisTurn > 0)
         {
-            if (currentHP >= 11)
+            if (currentHP >= GameConstants.PLAYER_PENALTY_THRESHOLD)
             {
-                TakeDamage(10);
+                TakeDamage(GameConstants.PLAYER_DRAW_PENALTY);
                 Card drawnCard = deck.DrawCard();
                 if (drawnCard != null)
                 {

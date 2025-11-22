@@ -31,11 +31,10 @@ public class DrawCardsSpecial : SpecialCard
     
     protected override void ExecuteSpecialEffect(Player caster, Player target)
     {
-        // Usar valor modificado si existe
-        int finalCards = modifiedCardsToDraw > 0 ? modifiedCardsToDraw : cardsToDraw;
+        int finalCards = ModifierApplicationHelper.GetFinalValue(modifiedCardsToDraw, cardsToDraw);
         caster.DrawCards(finalCards);
         Debug.Log($"{cardName}: {caster.playerName} roba {finalCards} cartas");
-        
+
         // Resetear
         modifiedCardsToDraw = 0;
     }
@@ -49,16 +48,13 @@ public class DrawCardsSpecial : SpecialCard
     
     protected override void ApplyModifiersToSelf(List<CardModifier> modifiers)
     {
-        modifiedCardsToDraw = cardsToDraw;
-        
-        foreach (CardModifier mod in modifiers)
-        {
-            if (mod.type == ModifierType.MultiplyAllValues || mod.type == ModifierType.MultiplyCardDraw)
-            {
-                modifiedCardsToDraw = Mathf.RoundToInt(modifiedCardsToDraw * mod.multiplier);
-                Debug.Log($"Modificador '{mod.modifierName}' aplicado: cartas {cardsToDraw} → {modifiedCardsToDraw}");
-            }
-        }
+        modifiedCardsToDraw = ModifierApplicationHelper.ApplyMultiplierModifiers(
+            cardsToDraw,
+            modifiers,
+            ModifierType.MultiplyCardDraw,
+            cardName,
+            "cartas"
+        );
     }
 }
 

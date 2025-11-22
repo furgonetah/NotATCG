@@ -18,8 +18,8 @@ public class GameManager : MonoBehaviour
     public CardQueue cardQueue;
 
     [Header("Game Settings")]
-    public int maxRounds = 3;
-    public float totalGameTime = 600f; 
+    public int maxRounds = GameConstants.MAX_ROUNDS;
+    public float totalGameTime = GameConstants.TOTAL_GAME_TIME;
     private float currentTime;
 
     [Header("UI")]
@@ -63,8 +63,8 @@ public class GameManager : MonoBehaviour
         gameState.activePlayer = player1;
         gameState.opponentPlayer = player2;
 
-        player1.DrawCards(10);
-        player2.DrawCards(10);
+        player1.DrawCards(GameConstants.INITIAL_DRAW_COUNT);
+        player2.DrawCards(GameConstants.INITIAL_DRAW_COUNT);
 
         currentTime = totalGameTime;
         gameState.timeRemaining = currentTime;
@@ -86,9 +86,8 @@ public class GameManager : MonoBehaviour
         // Penalización por timeout
         if (currentTime <= 0)
         {
-            // Restar 2 PV por segundo al jugador activo
-            gameState.activePlayer.TakeDamage(2);
-            Debug.Log($"{gameState.activePlayer.playerName} pierde 2 PV por timeout!");
+            gameState.activePlayer.TakeDamage(GameConstants.TIMEOUT_DAMAGE_PER_SECOND);
+            Debug.Log($"{gameState.activePlayer.playerName} pierde {GameConstants.TIMEOUT_DAMAGE_PER_SECOND} PV por timeout!");
         }
     }
 
@@ -101,7 +100,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"{winner.playerName} gana la ronda {gameState.currentRound}!");
 
-        if (winner.roundsWon >= 2)
+        if (winner.roundsWon >= GameConstants.ROUNDS_TO_WIN)
         {
             EndGame(winner);
         }
