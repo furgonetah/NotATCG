@@ -47,7 +47,7 @@ MonoBehaviour:
   cardName: Healing Potion
   cardType: 1
   cardDescriptionTemplate: Heal {healing}
-  cardArt: {fileID: 8695753628343013184, guid: 137e1f127e4bdc040ba0cdf03db5c0bd, type: 3}
+  cardArt: {fileID: -6324244719610223658, guid: 3c02b922a2fdfec44aa6f3934d95b87a, type: 3}
   currentDescription: 
   isPercentageHealing: 0
   flatHealing: 20

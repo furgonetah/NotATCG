@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using Photon.Pun;
 
 /// <summary>
 /// Maneja la visualización de la mano del jugador con sistema de reordenamiento por drag & drop,
@@ -15,38 +16,68 @@ public class HandDisplayUI : MonoBehaviour
     [Header("Prefab References")]
     [SerializeField] private GameObject cardSlotPrefab; // Prefab del CardSlot
     [SerializeField] private GameObject cardVisualPrefab; // Prefab del CardVisual (con imagen, texto, etc.)
-    
+
     [Header("Container")]
     [SerializeField] private Transform cardContainer; // El transform donde se crean los slots
-    
+
     [Header("Player Reference")]
     [SerializeField] private Player player;
-    
+
     [Header("Card Queue")]
     [SerializeField] private CardQueue cardQueue;
-    
+
     [Header("Visual Settings")]
     [SerializeField] private bool tweenCardReturn = true; // Animar retorno de cartas al soltar
     [SerializeField] private Color selectedColor = new Color(0.8f, 1f, 0.8f, 1f); // Tinte verde claro para cartas seleccionadas
-    
+
     // State
     private List<CardVisual> cardVisuals = new List<CardVisual>();
     private CardVisual selectedCardForDrag; // Carta siendo arrastrada actualmente
     private CardVisual hoveredCard; // Carta bajo el cursor
     private bool isCrossing = false; // Previene múltiples swaps simultáneos
     private int lastHandCount = -1;
-    
+
     // Tracking de cartas seleccionadas (añadidas a la queue)
     private List<CardVisual> selectedCards = new List<CardVisual>();
-    
+
     private RectTransform rect;
+
+    // Network control
+    private bool isLocalPlayer = false;
 
     void Start()
     {
         rect = cardContainer.GetComponent<RectTransform>();
-        
+
+        // Determinar si este es el jugador local
+        DetermineLocalPlayer();
+
         // Inicializar la mano
         RefreshHand();
+    }
+
+    void DetermineLocalPlayer()
+    {
+        // Si no estamos en red, es local por defecto (modo single-player)
+        if (!PhotonNetwork.IsConnected || !PhotonNetwork.InRoom)
+        {
+            isLocalPlayer = true;
+            Debug.Log($"[HandDisplayUI] Modo single-player - {player.playerName} es local");
+            return;
+        }
+
+        // En modo multijugador, verificar si es el jugador local
+        if (PhotonGameManager.Instance != null)
+        {
+            isLocalPlayer = (player == PhotonGameManager.Instance.localPlayer);
+            Debug.Log($"[HandDisplayUI] {player.playerName} es {(isLocalPlayer ? "LOCAL" : "REMOTO")}");
+        }
+        else
+        {
+            // Fallback si PhotonGameManager no está disponible
+            isLocalPlayer = true;
+            Debug.LogWarning($"[HandDisplayUI] PhotonGameManager no encontrado, asumiendo {player.playerName} es local");
+        }
     }
 
     void Update()
@@ -184,6 +215,13 @@ public class HandDisplayUI : MonoBehaviour
 
     void OnCardBeginDrag(CardVisual card)
     {
+        // Solo permitir drag si es jugador local
+        if (!isLocalPlayer)
+        {
+            Debug.Log($"[HandDisplayUI] Drag bloqueado - {player.playerName} no es jugador local");
+            return;
+        }
+
         selectedCardForDrag = card;
     }
 
@@ -207,6 +245,23 @@ public class HandDisplayUI : MonoBehaviour
     /// </summary>
     void OnCardClicked(CardVisual cardVisual)
     {
+        // Solo permitir clicks si es jugador local Y es su turno
+        if (!isLocalPlayer)
+        {
+            Debug.Log($"[HandDisplayUI] Click bloqueado - {player.playerName} no es jugador local");
+            return;
+        }
+
+        // Verificar si es el turno del jugador (solo en modo multijugador)
+        if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
+        {
+            if (PhotonGameManager.Instance != null && PhotonGameManager.Instance.gameState.activePlayer != player)
+            {
+                Debug.Log($"[HandDisplayUI] Click bloqueado - No es el turno de {player.playerName}");
+                return;
+            }
+        }
+
         // Si ya está seleccionada, deseleccionar
         if (selectedCards.Contains(cardVisual))
         {

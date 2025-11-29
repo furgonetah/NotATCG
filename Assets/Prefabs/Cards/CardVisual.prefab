@@ -565,7 +565,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Inflige {damage} puntos de da\xF1o"
+  m_text: "Inflige {damage} da\xF1o"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9ab47b06492cae543a6a8e8d5cf1b561, type: 2}
   m_sharedMaterial: {fileID: 1739561979706522279, guid: 9ab47b06492cae543a6a8e8d5cf1b561, type: 2}
@@ -592,7 +592,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18.45
+  m_fontSize: 21.1
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1

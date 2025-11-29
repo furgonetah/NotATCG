@@ -46,8 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Fireball
   cardType: 0
-  cardDescriptionTemplate: "Inlige {damage} puntos de da\xF1o."
-  cardArt: {fileID: 0}
+  cardDescriptionTemplate: "Inflige {damage} puntos de da\xF1o."
+  cardArt: {fileID: 5353841184698615464, guid: 552c1ed1c7bb91749be05a38ca7ce1d7, type: 3}
   currentDescription: 
   isPercentageDamage: 0
   flatDamage: 20

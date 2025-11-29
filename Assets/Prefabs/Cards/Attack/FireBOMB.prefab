@@ -46,8 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: FIRE BOMB
   cardType: 0
-  cardDescriptionTemplate: "Inlige {damage} puntos de da\xF1o."
-  cardArt: {fileID: 0}
+  cardDescriptionTemplate: "Inflige {damage} puntos de da\xF1o."
+  cardArt: {fileID: 1666479139865873607, guid: 9ae3562a80c43894ca1d63f971685302, type: 3}
   currentDescription: 
   isPercentageDamage: 0
   flatDamage: 100

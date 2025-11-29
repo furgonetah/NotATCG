@@ -47,7 +47,7 @@ MonoBehaviour:
   cardName: Panacea
   cardType: 1
   cardDescriptionTemplate: Heal {healing}
-  cardArt: {fileID: 0}
+  cardArt: {fileID: 7380019844815242850, guid: e59bd5b34f9091f4e95148265fc82270, type: 3}
   currentDescription: 
   isPercentageHealing: 0
   flatHealing: 50

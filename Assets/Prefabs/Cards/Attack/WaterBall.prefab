@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Waterball
   cardType: 0
-  cardDescriptionTemplate: "Inlige {damage} puntos de da\xF1o."
+  cardDescriptionTemplate: "Inflige {damage} puntos de da\xF1o."
   cardArt: {fileID: 0}
   currentDescription: 
   isPercentageDamage: 0
