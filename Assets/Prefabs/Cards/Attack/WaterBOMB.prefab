@@ -44,11 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a77ee0ec028c84f835a005a4469d1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardName: Water Hazard
+  cardName: WaterBOMB
   cardType: 0
   cardDescriptionTemplate: "Inflige {damage} puntos de da\xF1o."
   cardArt: {fileID: 0}
   currentDescription: 
   isPercentageDamage: 0
-  flatDamage: 50
+  flatDamage: 100
   percentageDamage: 0

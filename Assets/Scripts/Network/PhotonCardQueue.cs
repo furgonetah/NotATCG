@@ -22,7 +22,20 @@ public class PhotonCardQueue : MonoBehaviourPunCallbacks
     {
         Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] EndTurnNetwork llamado");
 
-        // Serializar cola como índices de cartas en la mano
+        // Determinar ID del jugador que lanza
+        int casterID = (caster == PhotonGameManager.Instance.player1) ? 1 : 2;
+
+        // PASO 1: Sincronizar orden de la mano del jugador activo primero
+        string[] handOrder = new string[caster.hand.cardsInHand.Count];
+        for (int i = 0; i < caster.hand.cardsInHand.Count; i++)
+        {
+            handOrder[i] = caster.hand.cardsInHand[i].cardName;
+        }
+
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Sincronizando mano de Player{casterID}: {handOrder.Length} cartas");
+        photonView.RPC("SyncPlayerHandRPC", RpcTarget.All, casterID, handOrder);
+
+        // PASO 2: Serializar cola como índices de cartas en la mano
         List<int> cardIndices = new List<int>();
 
         // Usar reflection para acceder a la lista privada queuedCards
@@ -39,13 +52,43 @@ public class PhotonCardQueue : MonoBehaviourPunCallbacks
             Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Carta '{card.cardName}' en índice {index}");
         }
 
-        // Determinar ID del jugador que lanza
-        int casterID = (caster == PhotonGameManager.Instance.player1) ? 1 : 2;
-
         Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Enviando RPC ExecuteQueueRPC - Caster: Player{casterID}, Cartas: {cardIndices.Count}");
 
-        // Enviar RPC a todos los clientes
+        // PASO 3: Enviar RPC de ejecución
         photonView.RPC("ExecuteQueueRPC", RpcTarget.All, casterID, cardIndices.ToArray());
+    }
+
+    [PunRPC]
+    void SyncPlayerHandRPC(int playerID, string[] handOrder)
+    {
+        Player player = (playerID == 1) ? PhotonGameManager.Instance.player1 : PhotonGameManager.Instance.player2;
+
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Sincronizando mano de {player.playerName}: {handOrder.Length} cartas");
+
+        List<Card> newHand = new List<Card>();
+        List<Card> remainingCards = new List<Card>(player.hand.cardsInHand);
+
+        foreach (string cardName in handOrder)
+        {
+            // Buscar la carta en las cartas restantes
+            Card card = remainingCards.Find(c => c.cardName == cardName);
+
+            if (card != null)
+            {
+                newHand.Add(card);
+                remainingCards.Remove(card); // Remover para manejar duplicados
+            }
+            else
+            {
+                Debug.LogError($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Carta '{cardName}' no encontrada en mano de {player.playerName}");
+            }
+        }
+
+        // Reemplazar la mano
+        player.hand.cardsInHand.Clear();
+        player.hand.cardsInHand.AddRange(newHand);
+
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Mano de {player.playerName} sincronizada: {player.hand.cardsInHand.Count} cartas");
     }
 
     [PunRPC]
@@ -87,6 +130,19 @@ public class PhotonCardQueue : MonoBehaviourPunCallbacks
         cardQueue.ClearQueue();
 
         Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Cola ejecutada y limpiada");
+
+        // Verificar si alguien murió
+        if (PhotonGameManager.Instance.gameState.playerDiedThisTurn)
+        {
+            Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Un jugador ha muerto - {PhotonGameManager.Instance.gameState.deadPlayer.playerName}");
+
+            // Solo el Master Client maneja la muerte
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonGameManager.Instance.OnPlayerDeath(PhotonGameManager.Instance.gameState.deadPlayer);
+            }
+            return; // No continuar con el siguiente turno
+        }
 
         // Swap active player
         PhotonGameManager.Instance.gameState.SwapActivePlayer();

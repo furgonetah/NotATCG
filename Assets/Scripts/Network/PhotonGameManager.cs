@@ -1,6 +1,7 @@
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections.Generic;
 
 public class PhotonGameManager : GameManager, IPunObservable, IInRoomCallbacks
 {
@@ -94,34 +95,61 @@ public class PhotonGameManager : GameManager, IPunObservable, IInRoomCallbacks
             Debug.Log("[CLIENT] Soy Player2 (local), Player1 es remoto");
         }
 
-        // Master Client genera las semillas y sincroniza
+        // Master Client baraja y sincroniza mazos
         if (PhotonNetwork.IsMasterClient)
         {
-            int seed1 = Random.Range(0, int.MaxValue);
-            int seed2 = Random.Range(0, int.MaxValue);
-            Debug.Log($"[MASTER] Generando semillas: seed1={seed1}, seed2={seed2}");
-            photonView.RPC("SyncShuffleSeeds", RpcTarget.All, seed1, seed2);
+            Debug.Log($"[MASTER] Barajando mazos...");
+
+            // Barajar ambos mazos
+            player1.deck.ShuffleDeck();
+            player2.deck.ShuffleDeck();
+
+            // Obtener el orden de las cartas de cada mazo
+            string[] p1DeckOrder = GetDeckOrder(player1);
+            string[] p2DeckOrder = GetDeckOrder(player2);
+
+            Debug.Log($"[MASTER] Enviando orden de mazos - P1: {p1DeckOrder.Length} cartas, P2: {p2DeckOrder.Length} cartas");
+            photonView.RPC("SyncDecksAndDrawRPC", RpcTarget.All, p1DeckOrder, p2DeckOrder);
         }
 
         gameInitialized = true;
     }
 
-    [PunRPC]
-    void SyncShuffleSeeds(int seed1, int seed2)
+    string[] GetDeckOrder(Player player)
     {
-        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Sincronizando mazos con semillas: seed1={seed1}, seed2={seed2}");
+        // Acceder al drawPile del mazo usando reflection
+        var drawPileField = typeof(Deck).GetField("drawPile",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
-        // Barajar mazo de Player1 con semilla 1
-        Random.InitState(seed1);
-        player1.deck.ShuffleDeck();
-        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Mazo de Player1 barajado con seed {seed1}");
+        if (drawPileField != null)
+        {
+            List<Card> drawPile = (List<Card>)drawPileField.GetValue(player.deck);
+            string[] order = new string[drawPile.Count];
 
-        // Barajar mazo de Player2 con semilla 2
-        Random.InitState(seed2);
-        player2.deck.ShuffleDeck();
-        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Mazo de Player2 barajado con seed {seed2}");
+            for (int i = 0; i < drawPile.Count; i++)
+            {
+                order[i] = drawPile[i].cardName;
+            }
 
-        // Robar cartas iniciales (idéntico en ambos clientes)
+            return order;
+        }
+
+        Debug.LogError("[PhotonGameManager] No se pudo acceder al drawPile del mazo");
+        return new string[0];
+    }
+
+    [PunRPC]
+    void SyncDecksAndDrawRPC(string[] p1DeckOrder, string[] p2DeckOrder)
+    {
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Sincronizando mazos - P1: {p1DeckOrder.Length} cartas, P2: {p2DeckOrder.Length} cartas");
+
+        // Reorganizar mazos según el orden enviado por el Master
+        ReorganizeDeck(player1, p1DeckOrder);
+        ReorganizeDeck(player2, p2DeckOrder);
+
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Mazos sincronizados");
+
+        // Ahora todos roban cartas del mazo sincronizado
         for (int i = 0; i < GameConstants.INITIAL_DRAW_COUNT; i++)
         {
             player1.DrawCard();
@@ -139,11 +167,113 @@ public class PhotonGameManager : GameManager, IPunObservable, IInRoomCallbacks
         gameState.activePlayer = player1;
         gameState.opponentPlayer = player2;
 
-        // Master inicia primer turno
+        // Master inicia el juego (ya no necesitamos sincronizar manos por separado)
         if (PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("StartFirstTurnRPC", RpcTarget.All);
         }
+    }
+
+    void ReorganizeDeck(Player player, string[] deckOrder)
+    {
+        var drawPileField = typeof(Deck).GetField("drawPile",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        if (drawPileField == null)
+        {
+            Debug.LogError("[PhotonGameManager] No se pudo acceder al campo 'drawPile' del Deck");
+            return;
+        }
+
+        List<Card> currentDrawPile = (List<Card>)drawPileField.GetValue(player.deck);
+        List<Card> newDrawPile = new List<Card>();
+        List<Card> remainingCards = new List<Card>(currentDrawPile);
+
+        foreach (string cardName in deckOrder)
+        {
+            Card card = remainingCards.Find(c => c.cardName == cardName);
+
+            if (card != null)
+            {
+                newDrawPile.Add(card);
+                remainingCards.Remove(card);
+            }
+            else
+            {
+                Debug.LogError($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Carta '{cardName}' no encontrada en mazo de {player.playerName}");
+            }
+        }
+
+        currentDrawPile.Clear();
+        currentDrawPile.AddRange(newDrawPile);
+
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Mazo de {player.playerName} reorganizado: {currentDrawPile.Count} cartas");
+    }
+
+    void SyncInitialHandsOrder()
+    {
+        // Obtener orden de ambas manos
+        string[] p1HandOrder = new string[player1.hand.cardsInHand.Count];
+        string[] p2HandOrder = new string[player2.hand.cardsInHand.Count];
+
+        for (int i = 0; i < player1.hand.cardsInHand.Count; i++)
+        {
+            p1HandOrder[i] = player1.hand.cardsInHand[i].cardName;
+        }
+
+        for (int i = 0; i < player2.hand.cardsInHand.Count; i++)
+        {
+            p2HandOrder[i] = player2.hand.cardsInHand[i].cardName;
+        }
+
+        Debug.Log($"[MASTER] Sincronizando orden inicial de manos");
+        photonView.RPC("SyncInitialHandsRPC", RpcTarget.All, p1HandOrder, p2HandOrder);
+    }
+
+    [PunRPC]
+    void SyncInitialHandsRPC(string[] p1HandOrder, string[] p2HandOrder)
+    {
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Recibiendo orden inicial de manos");
+
+        // Reorganizar mano de Player1
+        ReorganizeHand(player1, p1HandOrder);
+
+        // Reorganizar mano de Player2
+        ReorganizeHand(player2, p2HandOrder);
+
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Manos iniciales sincronizadas");
+
+        // Iniciar primer turno después de sincronizar
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("StartFirstTurnRPC", RpcTarget.All);
+        }
+    }
+
+    void ReorganizeHand(Player player, string[] handOrder)
+    {
+        List<Card> newHand = new List<Card>();
+        List<Card> remainingCards = new List<Card>(player.hand.cardsInHand);
+
+        foreach (string cardName in handOrder)
+        {
+            Card card = remainingCards.Find(c => c.cardName == cardName);
+
+            if (card != null)
+            {
+                newHand.Add(card);
+                remainingCards.Remove(card); // Remover para manejar duplicados
+            }
+            else
+            {
+                Debug.LogError($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Carta '{cardName}' no encontrada en mano de {player.playerName}");
+            }
+        }
+
+        player.hand.cardsInHand.Clear();
+        player.hand.cardsInHand.AddRange(newHand);
+
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Mano de {player.playerName} reorganizada: {player.hand.cardsInHand.Count} cartas");
     }
 
     [PunRPC]

@@ -50,5 +50,5 @@ MonoBehaviour:
   cardArt: {fileID: 0}
   currentDescription: 
   isPercentageDamage: 0
-  flatDamage: 100
+  flatDamage: 50
   percentageDamage: 0
