@@ -35,10 +35,10 @@ public class RoundIndicatorUI : MonoBehaviour
         ResetIndicators();
 
         // Obtener referencias a los jugadores si no están asignadas
-        if (player1 == null || player2 == null)
+        if ((player1 == null || player2 == null) && GameManager.Current != null)
         {
-            player1 = GameManager.Instance.player1;
-            player2 = GameManager.Instance.player2;
+            player1 = GameManager.Current.player1;
+            player2 = GameManager.Current.player2;
         }
 
         Debug.Log($"[RoundIndicatorUI] Initialized with {roundCircles.Count} circles");

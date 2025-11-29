@@ -27,7 +27,10 @@ public class Player : MonoBehaviour
     void Start()
     {
         currentHP = maxHP;
-        gameState = GameManager.Instance.gameState;
+        if (GameManager.Current != null)
+        {
+            gameState = GameManager.Current.gameState;
+        }
     }
     
     public void TakeDamage(int amount)
@@ -122,9 +125,12 @@ public class Player : MonoBehaviour
     private void OnDeath()
     {
         Debug.Log($"{playerName} ha sido derrotado!");
-        GameState gameState = GameManager.Instance.gameState;
-        gameState.playerDiedThisTurn = true;
-        gameState.deadPlayer = this;
+        if (GameManager.Current != null)
+        {
+            GameState gs = GameManager.Current.gameState;
+            gs.playerDiedThisTurn = true;
+            gs.deadPlayer = this;
+        }
     }
 
     public void ResetForNewRound()

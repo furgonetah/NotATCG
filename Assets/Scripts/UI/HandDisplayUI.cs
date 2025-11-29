@@ -44,6 +44,7 @@ public class HandDisplayUI : MonoBehaviour
 
     // Network control
     private bool isLocalPlayer = false;
+    private bool hasCheckedLocalPlayer = false;
 
     void Start()
     {
@@ -52,8 +53,11 @@ public class HandDisplayUI : MonoBehaviour
         // Determinar si este es el jugador local
         DetermineLocalPlayer();
 
-        // Inicializar la mano
-        RefreshHand();
+        // Solo inicializar la mano si ya sabemos si somos local (single-player)
+        if (!PhotonNetwork.IsConnected || hasCheckedLocalPlayer)
+        {
+            RefreshHand();
+        }
     }
 
     void DetermineLocalPlayer()
@@ -62,33 +66,51 @@ public class HandDisplayUI : MonoBehaviour
         if (!PhotonNetwork.IsConnected || !PhotonNetwork.InRoom)
         {
             isLocalPlayer = true;
+            hasCheckedLocalPlayer = true;
             Debug.Log($"[HandDisplayUI] Modo single-player - {player.playerName} es local");
             return;
         }
 
-        // En modo multijugador, verificar si es el jugador local
-        if (PhotonGameManager.Instance != null)
+        // En modo multijugador, verificar si PhotonGameManager ya asignó localPlayer
+        if (PhotonGameManager.Instance != null && PhotonGameManager.Instance.localPlayer != null)
         {
             isLocalPlayer = (player == PhotonGameManager.Instance.localPlayer);
+            hasCheckedLocalPlayer = true;
             Debug.Log($"[HandDisplayUI] {player.playerName} es {(isLocalPlayer ? "LOCAL" : "REMOTO")}");
-        }
-        else
-        {
-            // Fallback si PhotonGameManager no está disponible
-            isLocalPlayer = true;
-            Debug.LogWarning($"[HandDisplayUI] PhotonGameManager no encontrado, asumiendo {player.playerName} es local");
+
+            // Ocultar mano si es remoto
+            if (!isLocalPlayer)
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
 
     void Update()
     {
+        // En multijugador, seguir intentando determinar jugador local hasta que PhotonGameManager esté listo
+        if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && !hasCheckedLocalPlayer)
+        {
+            DetermineLocalPlayer();
+
+            // Si ahora sí sabemos que somos local, refrescar mano
+            if (hasCheckedLocalPlayer && isLocalPlayer && gameObject.activeInHierarchy)
+            {
+                RefreshHand();
+            }
+        }
+
+        // Solo ejecutar si el GameObject está activo (es jugador local)
+        if (!gameObject.activeInHierarchy)
+            return;
+
         // Refrescar si el número de cartas cambió
         if (player.hand.cardsInHand.Count != lastHandCount)
         {
             RefreshHand();
             lastHandCount = player.hand.cardsInHand.Count;
         }
-        
+
         // Manejar reordenamiento durante drag
         HandleCardReordering();
     }

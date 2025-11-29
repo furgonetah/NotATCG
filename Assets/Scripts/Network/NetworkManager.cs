@@ -2,6 +2,14 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
+/// <summary>
+/// NetworkManager - Gestiona la conexión a Photon solo en la escena Lobby
+///
+/// IMPORTANTE:
+/// - Este GameObject NO debe tener componente PhotonView
+/// - No usar DontDestroyOnLoad - se destruye automáticamente al cargar GameOnline
+/// - PhotonViews solo se usan en la escena GameOnline (PhotonGameManager, CardQueue, Players)
+/// </summary>
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public static NetworkManager Instance;
@@ -15,7 +23,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // NO usar DontDestroyOnLoad - NetworkManager solo se necesita en Lobby
+            // Cuando se carga GameOnline, este objeto se destruirá automáticamente
         }
         else
         {
@@ -26,6 +35,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        // IMPORTANTE: Habilitar sincronización automática de escenas
+        // Esto hace que cuando el Master Client carga una escena, todos los clientes la carguen también
+        PhotonNetwork.AutomaticallySyncScene = true;
+
         Debug.Log("[NetworkManager] Conectando a Photon Cloud...");
         PhotonNetwork.ConnectUsingSettings();
     }
@@ -66,7 +79,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             if (PhotonNetwork.IsMasterClient)
             {
                 // El Master Client carga la escena de juego para todos
-                PhotonNetwork.LoadLevel("SampleScene");
+                PhotonNetwork.LoadLevel("GameOnline");
             }
         }
     }
@@ -81,7 +94,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             Debug.Log("[NetworkManager] Sala completa. Iniciando juego...");
             if (PhotonNetwork.IsMasterClient)
             {
-                PhotonNetwork.LoadLevel("SampleScene");
+                PhotonNetwork.LoadLevel("GameOnline");
             }
         }
     }

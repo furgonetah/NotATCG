@@ -46,7 +46,8 @@ public class TurnManager : MonoBehaviour
             // Modo multijugador: Usar PhotonCardQueue
             if (photonCardQueue == null)
             {
-                photonCardQueue = GetComponent<PhotonCardQueue>();
+                // Buscar PhotonCardQueue en el GameObject que tiene CardQueue
+                photonCardQueue = cardQueue.GetComponent<PhotonCardQueue>();
             }
 
             if (photonCardQueue != null)
@@ -56,7 +57,7 @@ public class TurnManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("[TurnManager] PhotonCardQueue no encontrado en modo multijugador!");
+                Debug.LogError("[TurnManager] PhotonCardQueue no encontrado en GameObject de CardQueue!");
             }
         }
         else

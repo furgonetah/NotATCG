@@ -2,36 +2,31 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class PhotonGameManager : MonoBehaviourPunCallbacks
+public class PhotonGameManager : GameManager, IPunObservable, IInRoomCallbacks
 {
-    public static PhotonGameManager Instance { get; private set; }
+    public new static PhotonGameManager Instance { get; private set; }
 
-    [Header("Game State")]
-    public GameState gameState;
-
-    [Header("Players")]
-    public Player player1;
-    public Player player2;
     public Player localPlayer;
     public Player remotePlayer;
 
-    [Header("Managers")]
-    public TurnManager turnManager;
-    public CardQueue cardQueue;
-
-    [Header("Game Settings")]
-    public int maxRounds = GameConstants.MAX_ROUNDS;
-    public float totalGameTime = GameConstants.TOTAL_GAME_TIME;
-    private float currentTime;
-
-    [Header("UI")]
-    public VictoryUI victoryUI;
-
     private bool gameInitialized = false;
+
+    // PhotonView para RPCs (se asigna automáticamente al tener PhotonView component)
+    private PhotonView photonView;
+
+    void OnEnable()
+    {
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    void OnDisable()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
+    }
 
     void Awake()
     {
-        // Singleton
+        // Singleton para PhotonGameManager
         if (Instance == null)
         {
             Instance = this;
@@ -42,10 +37,21 @@ public class PhotonGameManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        // photonView ya está disponible automáticamente desde MonoBehaviourPunCallbacks
+        // Obtener PhotonView
+        photonView = GetComponent<PhotonView>();
+        if (photonView == null)
+        {
+            Debug.LogError("[PhotonGameManager] PhotonView component no encontrado!");
+        }
 
         // Inicializar GameState
         gameState = new GameState();
+    }
+
+    // IPunObservable implementation (requerido para PhotonView)
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        // No necesitamos serializar nada por ahora, usamos RPCs
     }
 
     void Start()
@@ -168,7 +174,7 @@ public class PhotonGameManager : MonoBehaviourPunCallbacks
         Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] {gameState.activePlayer.playerName} pierde {damage} PV por timeout");
     }
 
-    public void OnPlayerDeath(Player deadPlayer)
+    public override void OnPlayerDeath(Player deadPlayer)
     {
         // Solo Master Client maneja la lógica de muerte
         if (!PhotonNetwork.IsMasterClient) return;
@@ -242,7 +248,9 @@ public class PhotonGameManager : MonoBehaviourPunCallbacks
         victoryUI.ShowVictory(winner, winner.roundsWon, loserScore);
     }
 
-    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    #region IInRoomCallbacks Implementation
+
+    public void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Oponente se desconectó");
 
@@ -252,6 +260,13 @@ public class PhotonGameManager : MonoBehaviourPunCallbacks
             photonView.RPC("OnOpponentDisconnectedRPC", RpcTarget.All);
         }
     }
+
+    public void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer) { }
+    public void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged) { }
+    public void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps) { }
+    public void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient) { }
+
+    #endregion
 
     [PunRPC]
     void OnOpponentDisconnectedRPC()
@@ -265,7 +280,7 @@ public class PhotonGameManager : MonoBehaviourPunCallbacks
         victoryUI.ShowVictory(localPlayer, 2, 0);
     }
 
-    public void SetTimerActive(bool active)
+    public override void SetTimerActive(bool active)
     {
         gameState.isTimerActive = active;
     }

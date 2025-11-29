@@ -1,7 +1,10 @@
 using UnityEngine;
+using Photon.Pun;
 
 /// <summary>
-/// Gestiona las manos de ambos jugadores, mostrando solo la del jugador activo
+/// Gestiona las manos de ambos jugadores
+/// - Single-player: Muestra solo la mano del jugador activo
+/// - Multijugador: HandDisplayUI se encarga de mostrar solo la mano local
 /// </summary>
 public class HandManager : MonoBehaviour
 {
@@ -16,19 +19,37 @@ public class HandManager : MonoBehaviour
     {
         if (gameManager == null)
         {
-            gameManager = GameManager.Instance;
+            gameManager = GameManager.Current;
         }
 
-        // Al inicio, mostrar solo la mano del jugador activo
-        UpdateActiveHand();
+        // Solo en single-player, mostrar la mano del jugador activo
+        // En multijugador, HandDisplayUI se encarga de mostrar solo la mano local
+        if (!PhotonNetwork.IsConnected || !PhotonNetwork.InRoom)
+        {
+            UpdateActiveHand();
+        }
     }
 
     /// <summary>
     /// Actualiza qué mano debe mostrarse según el jugador activo
-    /// Llamar esto al cambiar de turno
+    /// Solo se usa en modo single-player
     /// </summary>
     public void UpdateActiveHand()
     {
+        // En multijugador, no alternar visibilidad de manos
+        // HandDisplayUI ya se encarga de mostrar solo la mano local
+        if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
+        {
+            Debug.Log("[HandManager] Modo multijugador - HandDisplayUI controla visibilidad");
+            return;
+        }
+
+        // Intentar obtener GameManager si aún no está asignado
+        if (gameManager == null)
+        {
+            gameManager = GameManager.Current;
+        }
+
         if (gameManager == null || gameManager.gameState == null)
         {
             Debug.LogWarning("GameManager o GameState es null en HandManager");

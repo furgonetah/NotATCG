@@ -1,10 +1,29 @@
 using UnityEngine;
+using Photon.Pun;
 
 public class GameManager : MonoBehaviour
 {
 
     // TODO: todo lo referente a los tiempos hay que corregirlos
     public static GameManager Instance { get; private set; }
+
+    /// <summary>
+    /// Devuelve el GameManager activo (GameManager en singleplayer, PhotonGameManager en multijugador)
+    /// Usar esta propiedad para acceso unificado en todos los scripts
+    /// </summary>
+    public static GameManager Current
+    {
+        get
+        {
+            // Si estamos en multijugador, usar PhotonGameManager
+            if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonGameManager.Instance != null)
+            {
+                return PhotonGameManager.Instance;
+            }
+            // Caso por defecto: GameManager singleton
+            return Instance;
+        }
+    }
 
     [Header("Game State")]
     public GameState gameState;
@@ -20,7 +39,7 @@ public class GameManager : MonoBehaviour
     [Header("Game Settings")]
     public int maxRounds = GameConstants.MAX_ROUNDS;
     public float totalGameTime = GameConstants.TOTAL_GAME_TIME;
-    private float currentTime;
+    protected float currentTime;
 
     [Header("UI")]
     public VictoryUI victoryUI;
@@ -91,7 +110,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void OnPlayerDeath(Player deadPlayer)
+    public virtual void OnPlayerDeath(Player deadPlayer)
     {
         gameState.SetPhase(GamePhase.RoundEnd);
 
@@ -138,7 +157,7 @@ public class GameManager : MonoBehaviour
 
         victoryUI.ShowVictory(winner, winner.roundsWon, loserScore);
     }
-    public void SetTimerActive(bool active)
+    public virtual void SetTimerActive(bool active)
     {
         gameState.isTimerActive = active;
     }

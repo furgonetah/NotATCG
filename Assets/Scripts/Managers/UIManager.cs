@@ -24,21 +24,26 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        gameState = GameManager.Instance.gameState;
-        InitializeHealthBars();
-        UpdateAllUI();
+        if (GameManager.Current != null)
+        {
+            gameState = GameManager.Current.gameState;
+            InitializeHealthBars();
+            UpdateAllUI();
+        }
     }
 
     void InitializeHealthBars()
     {
-        if (player1_HealthBar != null && GameManager.Instance.player1 != null)
+        if (GameManager.Current == null) return;
+
+        if (player1_HealthBar != null && GameManager.Current.player1 != null)
         {
-            player1_HealthBar.Initialize(GameManager.Instance.player1);
+            player1_HealthBar.Initialize(GameManager.Current.player1);
         }
 
-        if (player2_HealthBar != null && GameManager.Instance.player2 != null)
+        if (player2_HealthBar != null && GameManager.Current.player2 != null)
         {
-            player2_HealthBar.Initialize(GameManager.Instance.player2);
+            player2_HealthBar.Initialize(GameManager.Current.player2);
         }
 
         healthBarsInitialized = true;
@@ -46,11 +51,11 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance != null && GameManager.Instance.gameState != null)
+        if (GameManager.Current != null && GameManager.Current.gameState != null)
         {
             if (gameState == null)
             {
-                gameState = GameManager.Instance.gameState;
+                gameState = GameManager.Current.gameState;
             }
 
             // Inicializar barras de vida si no se ha hecho
@@ -65,13 +70,13 @@ public class UIManager : MonoBehaviour
 
     void UpdateAllUI()
     {
-        if (gameState.activePlayer == null) return;
+        if (GameManager.Current == null || gameState == null || gameState.activePlayer == null) return;
 
-        player1_Name_Text.text = GameManager.Instance.player1.playerName;
-        player2_Name_Text.text = GameManager.Instance.player2.playerName;
+        player1_Name_Text.text = GameManager.Current.player1.playerName;
+        player2_Name_Text.text = GameManager.Current.player2.playerName;
 
-        player1_HP_Text.text = $"HP: {GameManager.Instance.player1.currentHP}/{GameManager.Instance.player1.maxHP}";
-        player2_HP_Text.text = $"HP: {GameManager.Instance.player2.currentHP}/{GameManager.Instance.player2.maxHP}";
+        player1_HP_Text.text = $"HP: {GameManager.Current.player1.currentHP}/{GameManager.Current.player1.maxHP}";
+        player2_HP_Text.text = $"HP: {GameManager.Current.player2.currentHP}/{GameManager.Current.player2.maxHP}";
 
         turnInfo_Text.text = $"Turno de: {gameState.activePlayer.playerName}";
     }
