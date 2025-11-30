@@ -282,6 +282,12 @@ public class PhotonGameManager : GameManager, IPunObservable, IInRoomCallbacks
         Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Iniciando primer turno");
         gameState.SetPhase(GamePhase.Playing);
         turnManager.StartFirstTurn();
+
+        // Actualizar estado del botón de fin de turno
+        if (turnManager.endTurnButton != null)
+        {
+            turnManager.endTurnButton.UpdateButtonState();
+        }
     }
 
     void UpdateTimer()
@@ -358,6 +364,12 @@ public class PhotonGameManager : GameManager, IPunObservable, IInRoomCallbacks
 
         gameState.SetPhase(GamePhase.Playing);
         turnManager.StartFirstTurn();
+
+        // Actualizar estado del botón de fin de turno
+        if (turnManager.endTurnButton != null)
+        {
+            turnManager.endTurnButton.UpdateButtonState();
+        }
 
         Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Comienza la ronda {gameState.currentRound}");
     }

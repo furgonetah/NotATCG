@@ -6,6 +6,7 @@ public class TurnManager : MonoBehaviour
     [Header("References")]
     public CardQueue cardQueue;
     public HandManager handManager; // CAMBIADO: Ahora usa HandManager en lugar de HandDisplayUI
+    public EndTurnButton endTurnButton; // Referencia al botón de fin de turno
 
     private GameState gameState;
     private PhotonCardQueue photonCardQueue;
@@ -29,6 +30,12 @@ public class TurnManager : MonoBehaviour
         if (handManager != null)
         {
             handManager.UpdateActiveHand();
+        }
+
+        // Actualizar estado del botón de fin de turno
+        if (endTurnButton != null)
+        {
+            endTurnButton.UpdateButtonState();
         }
 
         Debug.Log($"[TurnManager] Turno de {gameState.activePlayer.playerName}");
@@ -91,6 +98,12 @@ public class TurnManager : MonoBehaviour
             if (handManager != null)
             {
                 handManager.UpdateActiveHand();
+            }
+
+            // Actualizar estado del botón de fin de turno
+            if (endTurnButton != null)
+            {
+                endTurnButton.UpdateButtonState();
             }
 
             Debug.Log($"[TurnManager] Turno de {gameState.activePlayer.playerName}");

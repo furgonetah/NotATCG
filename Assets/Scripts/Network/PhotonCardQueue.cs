@@ -148,6 +148,12 @@ public class PhotonCardQueue : MonoBehaviourPunCallbacks
         PhotonGameManager.Instance.gameState.SwapActivePlayer();
         Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Jugador activo cambiado a: {PhotonGameManager.Instance.gameState.activePlayer.playerName}");
 
+        // Actualizar estado del botón de fin de turno inmediatamente
+        if (PhotonGameManager.Instance.turnManager.endTurnButton != null)
+        {
+            PhotonGameManager.Instance.turnManager.endTurnButton.UpdateButtonState();
+        }
+
         // Solo el master inicia el siguiente turno
         if (PhotonNetwork.IsMasterClient)
         {

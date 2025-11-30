@@ -870,6 +870,7 @@ GameObject:
   - component: {fileID: 366648763}
   - component: {fileID: 366648762}
   - component: {fileID: 366648761}
+  - component: {fileID: 366648764}
   m_Layer: 5
   m_Name: Button_EndTurm
   m_TagString: Untagged
@@ -991,6 +992,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 366648759}
   m_CullTransparentMesh: 1
+--- !u!114 &366648764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 366648759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c70f1e1f505518a4abd932e1530d018a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &398073673
 GameObject:
   m_ObjectHideFlags: 0
@@ -3104,13 +3117,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1: {fileID: 352299483}
   player2: {fileID: 1512728000}
-  localPlayer: {fileID: 0}
-  remotePlayer: {fileID: 0}
   turnManager: {fileID: 1549675044}
   cardQueue: {fileID: 889648161}
   maxRounds: 3
   totalGameTime: 600
   victoryUI: {fileID: 771033170}
+  localPlayer: {fileID: 0}
+  remotePlayer: {fileID: 0}
 --- !u!1 &1316705262
 GameObject:
   m_ObjectHideFlags: 0
@@ -3518,6 +3531,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardQueue: {fileID: 889648161}
   handManager: {fileID: 913941990}
+  endTurnButton: {fileID: 366648764}
 --- !u!4 &1549675045
 Transform:
   m_ObjectHideFlags: 0
