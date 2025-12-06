@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8494972059673353475}
   - component: {fileID: 6318264254656808801}
   m_Layer: 0
-  m_Name: FireBall
+  m_Name: Incendio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,11 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a77ee0ec028c84f835a005a4469d1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardName: Fireball
+  cardName: Incendio
   cardType: 0
   cardDescriptionTemplate: "Inflige {damage} puntos de da\xF1o."
-  cardArt: {fileID: 5353841184698615464, guid: 552c1ed1c7bb91749be05a38ca7ce1d7, type: 3}
+  cardArt: {fileID: 2620120361815563406, guid: 67825fa592333d145aea896986e77dea, type: 3}
   currentDescription: 
   isPercentageDamage: 0
-  flatDamage: 20
+  flatDamage: 50
   percentageDamage: 0

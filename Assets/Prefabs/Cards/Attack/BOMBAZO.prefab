@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8494972059673353475}
   - component: {fileID: 6318264254656808801}
   m_Layer: 0
-  m_Name: WaterBOMB
+  m_Name: BOMBAZO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,10 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a77ee0ec028c84f835a005a4469d1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardName: WaterBOMB
+  cardName: BOMBAZO
   cardType: 0
   cardDescriptionTemplate: "Inflige {damage} puntos de da\xF1o."
-  cardArt: {fileID: 0}
+  cardArt: {fileID: 1666479139865873607, guid: 9ae3562a80c43894ca1d63f971685302, type: 3}
   currentDescription: 
   isPercentageDamage: 0
   flatDamage: 100

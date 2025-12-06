@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8494972059673353475}
   - component: {fileID: 6318264254656808801}
   m_Layer: 0
-  m_Name: FireHazard
+  m_Name: Distorsion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,11 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a77ee0ec028c84f835a005a4469d1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardName: Fire Hazard
+  cardName: Distorsion
   cardType: 0
-  cardDescriptionTemplate: "Inflige {damage} puntos de da\xF1o."
-  cardArt: {fileID: 0}
+  cardDescriptionTemplate: Reduce los PV a la mitad.
+  cardArt: {fileID: -8795370394478193817, guid: 9dd23448af3373b468ef88be80930975, type: 3}
   currentDescription: 
-  isPercentageDamage: 0
-  flatDamage: 50
-  percentageDamage: 0
+  isPercentageDamage: 1
+  flatDamage: 100
+  percentageDamage: 0.5

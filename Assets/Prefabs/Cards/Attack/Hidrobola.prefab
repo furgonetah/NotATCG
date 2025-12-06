@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8494972059673353475}
   - component: {fileID: 6318264254656808801}
   m_Layer: 0
-  m_Name: WaterBall
+  m_Name: Hidrobola
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,10 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a77ee0ec028c84f835a005a4469d1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardName: Waterball
+  cardName: Hidrobola
   cardType: 0
   cardDescriptionTemplate: "Inflige {damage} puntos de da\xF1o."
-  cardArt: {fileID: 0}
+  cardArt: {fileID: -5692329307756149488, guid: 54ff5c52a8215304098ff4b79f3b8a5f, type: 3}
   currentDescription: 
   isPercentageDamage: 0
   flatDamage: 20
