@@ -46,6 +46,29 @@ public class Deck : MonoBehaviour
     {
         return drawPile.Count == 0;
     }
+
+    public int GetDeckSize()
+    {
+        return drawPile.Count;
+    }
+
+    /// <summary>
+    /// Roba una carta específica por nombre (para sincronización de red).
+    /// Busca la carta en el drawPile y la elimina.
+    /// </summary>
+    public Card DrawCardByName(string cardName)
+    {
+        Card card = drawPile.Find(c => c.cardName == cardName);
+        if (card != null)
+        {
+            drawPile.Remove(card);
+            return card;
+        }
+
+        Debug.LogWarning($"Carta '{cardName}' no encontrada en drawPile");
+        return null;
+    }
+
     public void ResetDeck()
     {
         drawPile.Clear();

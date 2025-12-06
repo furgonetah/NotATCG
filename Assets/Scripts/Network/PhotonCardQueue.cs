@@ -80,15 +80,20 @@ public class PhotonCardQueue : MonoBehaviourPunCallbacks
             }
             else
             {
-                Debug.LogError($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Carta '{cardName}' no encontrada en mano de {player.playerName}");
+                // Carta no encontrada - puede ser porque se jugó o es nueva (robada)
+                Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Carta '{cardName}' no encontrada en mano actual de {player.playerName} (se jugó o aún no sincronizada)");
             }
         }
+
+        // IMPORTANTE: Mantener cartas que no estaban en handOrder (cartas robadas recientemente)
+        // remainingCards ahora contiene solo las cartas que NO estaban en handOrder
+        newHand.AddRange(remainingCards);
 
         // Reemplazar la mano
         player.hand.cardsInHand.Clear();
         player.hand.cardsInHand.AddRange(newHand);
 
-        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Mano de {player.playerName} sincronizada: {player.hand.cardsInHand.Count} cartas");
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Mano de {player.playerName} sincronizada: {player.hand.cardsInHand.Count} cartas (incluye {remainingCards.Count} cartas nuevas)");
     }
 
     [PunRPC]
@@ -131,6 +136,10 @@ public class PhotonCardQueue : MonoBehaviourPunCallbacks
 
         Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Cola ejecutada y limpiada");
 
+        // IMPORTANTE: Forzar refresh de UI de manos después de ejecutar cartas
+        // (necesario porque UpdateActiveHand() no funciona en multijugador)
+        RefreshAllHands();
+
         // Verificar si alguien murió
         if (PhotonGameManager.Instance.gameState.playerDiedThisTurn)
         {
@@ -166,5 +175,33 @@ public class PhotonCardQueue : MonoBehaviourPunCallbacks
     {
         Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] StartNextTurnRPC - Iniciando siguiente turno");
         PhotonGameManager.Instance.turnManager.StartFirstTurn();
+    }
+
+    /// <summary>
+    /// Refresca la UI de las manos de ambos jugadores.
+    /// Necesario en multijugador porque UpdateActiveHand() no funciona.
+    /// </summary>
+    void RefreshAllHands()
+    {
+        HandManager handManager = FindObjectOfType<HandManager>();
+
+        if (handManager == null)
+        {
+            Debug.LogWarning("[PhotonCardQueue] HandManager no encontrado, no se puede refrescar");
+            return;
+        }
+
+        // Refrescar ambas manos si existen
+        if (handManager.player1HandDisplay != null && handManager.player1HandDisplay.gameObject.activeInHierarchy)
+        {
+            handManager.player1HandDisplay.RefreshHand();
+        }
+
+        if (handManager.player2HandDisplay != null && handManager.player2HandDisplay.gameObject.activeInHierarchy)
+        {
+            handManager.player2HandDisplay.RefreshHand();
+        }
+
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Manos refrescadas después de ejecutar cartas");
     }
 }

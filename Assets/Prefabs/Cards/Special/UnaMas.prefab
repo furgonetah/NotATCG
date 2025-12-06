@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4720886608401722239
+--- !u!1 &1130856587469049231
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,46 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8362717350720570961}
-  - component: {fileID: 2937768565348102021}
+  - component: {fileID: 4582652793695002914}
+  - component: {fileID: 1942783244176522613}
   m_Layer: 0
-  m_Name: HealingPotion
+  m_Name: UnaMas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8362717350720570961
+--- !u!4 &4582652793695002914
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4720886608401722239}
+  m_GameObject: {fileID: 1130856587469049231}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1108.4645, y: 718.74176, z: -18.83442}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2937768565348102021
+--- !u!114 &1942783244176522613
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4720886608401722239}
+  m_GameObject: {fileID: 1130856587469049231}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 158d749e0972b1040be79dedb76c3489, type: 3}
+  m_Script: {fileID: 11500000, guid: 00c336c67886e624eacb333b0269597d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardName: Healing Potion
-  cardType: 1
-  cardDescriptionTemplate: Heal {healing}
-  cardArt: {fileID: -6324244719610223658, guid: 3c02b922a2fdfec44aa6f3934d95b87a, type: 3}
+  cardName: UnaMas
+  cardType: 2
+  cardDescriptionTemplate: "Ambos jugadores pueden jugar 1 carta m\xE1s por turno
+    esta partida."
+  cardArt: {fileID: 0}
   currentDescription: 
-  isPercentageHealing: 0
-  flatHealing: 50
-  percentageHealing: 0
+  additionalCards: 1

@@ -9,8 +9,8 @@ using Photon.Pun;
 public class HandManager : MonoBehaviour
 {
     [Header("Hand Display References")]
-    [SerializeField] private HandDisplayUI player1HandDisplay;
-    [SerializeField] private HandDisplayUI player2HandDisplay;
+    public HandDisplayUI player1HandDisplay;
+    public HandDisplayUI player2HandDisplay;
 
     [Header("Game References")]
     [SerializeField] private GameManager gameManager;

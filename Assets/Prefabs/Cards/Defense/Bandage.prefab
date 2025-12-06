@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8362717350720570961}
   - component: {fileID: 2937768565348102021}
   m_Layer: 0
-  m_Name: HealingPotion
+  m_Name: Bandage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,11 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 158d749e0972b1040be79dedb76c3489, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardName: Healing Potion
+  cardName: Bandage
   cardType: 1
   cardDescriptionTemplate: Heal {healing}
-  cardArt: {fileID: -6324244719610223658, guid: 3c02b922a2fdfec44aa6f3934d95b87a, type: 3}
+  cardArt: {fileID: 7380019844815242850, guid: e59bd5b34f9091f4e95148265fc82270, type: 3}
   currentDescription: 
   isPercentageHealing: 0
-  flatHealing: 50
+  flatHealing: 20
   percentageHealing: 0

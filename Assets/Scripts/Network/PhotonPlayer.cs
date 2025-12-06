@@ -70,4 +70,34 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         player.activeModifiers.Add(modifier);
         Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Modificador '{modifierName}' aplicado a {player.playerName} (RPC)");
     }
+
+    /// <summary>
+    /// Roba cartas de forma determinista para ambos clientes.
+    /// IMPORTANTE: Este método se ejecuta en AMBOS clientes simultáneamente (como las otras cartas),
+    /// por lo que NO debe usar RPCs, sino robar las mismas cartas en ambos lados.
+    /// </summary>
+    public void DrawCards(int amount)
+    {
+        if (amount <= 0) return;
+
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] {player.playerName} va a robar {amount} cartas");
+
+        for (int i = 0; i < amount; i++)
+        {
+            if (player.deck.IsEmpty())
+            {
+                Debug.LogWarning($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] Deck de {player.playerName} está vacío, no puede robar más cartas");
+                break;
+            }
+
+            Card drawnCard = player.deck.DrawCard();
+            if (drawnCard != null)
+            {
+                player.hand.AddCard(drawnCard);
+                Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] {player.playerName} robó carta: {drawnCard.cardName}");
+            }
+        }
+
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] {player.playerName} terminó de robar. Cartas en mano: {player.hand.GetHandSize()}");
+    }
 }

@@ -118,7 +118,7 @@ public class HandDisplayUI : MonoBehaviour
     /// <summary>
     /// Refresca completamente la visualización de la mano
     /// </summary>
-    void RefreshHand()
+    public void RefreshHand()
     {
         // Limpiar slots y cartas existentes
         ClearHand();
