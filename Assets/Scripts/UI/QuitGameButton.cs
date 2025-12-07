@@ -12,9 +12,6 @@ public class QuitGameButton : MonoBehaviour
         {
             quitButton.onClick.AddListener(OnQuitClicked);
         }
-        else
-        {
-        }
     }
 
     void OnQuitClicked()

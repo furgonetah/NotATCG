@@ -70,9 +70,6 @@ public class BackGroundController : MonoBehaviour
         {
             StartTitleRotation();
         }
-        else
-        {
-        }
     }
 
     void StartColorCycle()

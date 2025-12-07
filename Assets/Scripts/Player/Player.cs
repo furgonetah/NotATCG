@@ -87,9 +87,6 @@ public class Player : MonoBehaviour
                     hand.AddCard(drawnCard);
                 }
             }
-            else
-            {
-            }
         }
         else
         {
@@ -97,9 +94,6 @@ public class Player : MonoBehaviour
             if (drawnCard != null)
             {
                 hand.AddCard(drawnCard);
-            }
-            else
-            {
             }
         }
     }

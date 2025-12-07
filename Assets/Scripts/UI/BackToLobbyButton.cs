@@ -14,9 +14,6 @@ public class BackToLobbyButton : MonoBehaviour
         {
             backButton.onClick.AddListener(OnBackToLobbyClicked);
         }
-        else
-        {
-        }
     }
 
     void OnBackToLobbyClicked()
@@ -36,7 +33,7 @@ public class BackToLobbyButton : MonoBehaviour
         {
             Debug.Log("[BackToLobbyButton] Ya desconectado de Photon");
         }
-        
+
         SceneManager.LoadScene("Lobby");
     }
 
