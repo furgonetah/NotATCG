@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     public int roundsWon = 0;
     
     [Header("Card Modifiers")]
-    public List<CardModifier> activeModifiers = new List<CardModifier>(); // Modificadores activos
+    public List<CardModifier> activeModifiers = new List<CardModifier>();
     
     private GameState gameState;
 
@@ -43,8 +43,6 @@ public class Player : MonoBehaviour
             OnDeath();
         }
 
-        // TODO: UI y sonido de daño
-        Debug.Log($"{playerName} recibe {amount} de daño. HP: {currentHP}");
     }
 
     public void TakeDamagePercentage(float percentage)
@@ -62,10 +60,8 @@ public class Player : MonoBehaviour
             currentHP = maxHP;
         }
 
-        Debug.Log($"{playerName} se cura {amount} HP. HP: {currentHP}");
     }
 
-    //TODO: revisar bien la cura porcentual cuando se aplique, que ahora mismo no me funciona el cerebro
     public void HealPercentage(float percentage)
     {
         int healAmount = Mathf.CeilToInt(maxHP * percentage);
@@ -74,11 +70,9 @@ public class Player : MonoBehaviour
 
     public void DrawCard()
     {
-        Debug.Log($"{playerName} intenta robar carta. Deck vacío: {deck.IsEmpty()}, Mano vacía: {hand.IsEmpty()}");
 
         if (deck.IsEmpty())
         {
-            Debug.Log($"{playerName} no tiene cartas en el mazo. Solo puede usar Ataque Básico.");
             return;
         }
 
@@ -91,12 +85,10 @@ public class Player : MonoBehaviour
                 if (drawnCard != null)
                 {
                     hand.AddCard(drawnCard);
-                    Debug.Log($"{playerName} robó carta con penalización: {drawnCard.cardName}");
                 }
             }
             else
             {
-                Debug.Log($"{playerName} no tiene suficientes PV para robar cartas.");
             }
         }
         else
@@ -105,11 +97,9 @@ public class Player : MonoBehaviour
             if (drawnCard != null)
             {
                 hand.AddCard(drawnCard);
-                Debug.Log($"{playerName} robó carta: {drawnCard.cardName}");
             }
             else
             {
-                Debug.Log($"{playerName} intentó robar pero DrawCard devolvió null");
             }
         }
     }
@@ -124,7 +114,6 @@ public class Player : MonoBehaviour
 
     private void OnDeath()
     {
-        Debug.Log($"{playerName} ha sido derrotado!");
         if (GameManager.Current != null)
         {
             GameState gs = GameManager.Current.gameState;
@@ -136,6 +125,6 @@ public class Player : MonoBehaviour
     public void ResetForNewRound()
     {
         currentHP = maxHP;
-        activeModifiers.Clear(); // Limpiar modificadores al empezar nueva ronda
+        activeModifiers.Clear(); 
     }
 }

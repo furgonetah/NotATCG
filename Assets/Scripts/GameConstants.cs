@@ -10,78 +10,78 @@ public static class GameConstants
     // CARD VISUAL - Configuración de animaciones y efectos visuales
     // ==========================================
 
-    /// <summary>Distancia vertical (px) que sube una carta al seleccionarla</summary>
+    //Distancia vertical (px) que sube una carta al seleccionarla
     public const float CARD_SELECTION_OFFSET = 50f;
 
-    /// <summary>Escala multiplicadora cuando el cursor está sobre la carta</summary>
+    //Escala multiplicadora cuando el cursor está sobre la carta
     public const float CARD_HOVER_SCALE = 1.1f;
 
-    /// <summary>Duración estándar de animaciones de cartas (segundos)</summary>
+    //Duración estándar de animaciones de cartas (segundos)
     public const float CARD_ANIMATION_DURATION = 0.2f;
 
-    /// <summary>Duración de animaciones rápidas como swap (segundos)</summary>
+    //Duración de animaciones rápidas como swap (segundos)
     public const float CARD_SWAP_ANIMATION_DURATION = 0.1f;
 
-    /// <summary>Velocidad de suavizado de rotación durante drag</summary>
+    //Velocidad de suavizado de rotación durante drag
     public const float CARD_ROTATION_SMOOTH_SPEED = 10f;
 
-    /// <summary>Ángulo máximo de rotación al arrastrar una carta (grados)</summary>
+    //Ángulo máximo de rotación al arrastrar una carta (grados)
     public const float CARD_MAX_ROTATION_ANGLE = 40f;
 
-    /// <summary>Sensibilidad de rotación basada en velocidad de drag</summary>
+    //Sensibilidad de rotación basada en velocidad de drag
     public const float CARD_ROTATION_SENSITIVITY = 1f;
 
-    /// <summary>Transparencia de la carta mientras se arrastra (0-1)</summary>
+    //Transparencia de la carta mientras se arrastra (0-1)
     public const float CARD_DRAG_ALPHA = 0.7f;
 
-    /// <summary>Velocidad de decaimiento de rotación cuando no hay movimiento</summary>
+    //Velocidad de decaimiento de rotación cuando no hay movimiento
     public const float CARD_ROTATION_DECAY_SPEED = 5f;
 
-    /// <summary>Offset horizontal para animación de swap entre cartas</summary>
+    //Offset horizontal para animación de swap entre cartas
     public const float CARD_SWAP_OFFSET = 10f;
 
     // ==========================================
     // PLAYER - Configuración de jugadores
     // ==========================================
 
-    /// <summary>Puntos de vida máximos por ronda</summary>
+    //Puntos de vida máximos por ronda
     public const int PLAYER_MAX_HP = 100;
 
-    /// <summary>HP mínimo requerido para robar cartas con penalización</summary>
+    ///HP mínimo requerido para robar cartas con penalización
     public const int PLAYER_PENALTY_THRESHOLD = 11;
 
-    /// <summary>Daño recibido al robar una carta cuando la mano está vacía</summary>
+    //Daño recibido al robar una carta cuando la mano está vacía
     public const int PLAYER_DRAW_PENALTY = 10;
 
-    /// <summary>Daño por segundo cuando se agota el tiempo del jugador</summary>
+    //Daño por segundo cuando se agota el tiempo del jugador
     public const int TIMEOUT_DAMAGE_PER_SECOND = 2;
 
     // ==========================================
     // HAND & DECK - Configuración de mano y mazo
     // ==========================================
 
-    /// <summary>Tamaño máximo de la mano</summary>
+    //Tamaño máximo de la mano
     public const int HAND_MAX_SIZE = 10;
 
-    /// <summary>Número de cartas que se pueden jugar por turno (por defecto)</summary>
+    //Número de cartas que se pueden jugar por turno (por defecto)
     public const int CARDS_PER_TURN = 2;
 
-    /// <summary>Cartas iniciales que roba cada jugador al inicio de la partida</summary>
+    //Cartas iniciales que roba cada jugador al inicio de la partida
     public const int INITIAL_DRAW_COUNT = 10;
 
-    /// <summary>Tamaño del mazo de cada jugador</summary>
+    //Tamaño del mazo de cada jugador
     public const int DECK_SIZE = 25;
 
     // ==========================================
     // GAME - Configuración general del juego
     // ==========================================
 
-    /// <summary>Número máximo de rondas (mejor de 3)</summary>
+    //Número máximo de rondas (mejor de 3)
     public const int MAX_ROUNDS = 3;
 
-    /// <summary>Rondas necesarias para ganar la partida</summary>
+    //Rondas necesarias para ganar la partida
     public const int ROUNDS_TO_WIN = 2;
 
-    /// <summary>Tiempo total de juego en segundos (configurable)</summary>
+    //Tiempo total de juego en segundos (configurable)
     public const float TOTAL_GAME_TIME = 600f; // 10 minutos
 }

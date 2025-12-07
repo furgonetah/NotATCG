@@ -9,7 +9,7 @@ public class VictoryUI : MonoBehaviour
     
     void Start()
     {
-        victoryPanel.SetActive(false); // Oculto al inicio
+        victoryPanel.SetActive(false); 
     }
     
     public void ShowVictory(Player winner, int winnerScore, int loserScore)

@@ -11,16 +11,12 @@ public class Hand : MonoBehaviour
         if (cardsInHand.Count < maxHandSize)
         {
             cardsInHand.Add(card);
-            // TODO: UI de añadir carta
-            Debug.Log($"Carta añadida a la mano: {card.cardName}");
         }
     }
     
     public void RemoveCard(Card card)
     {
         cardsInHand.Remove(card);
-        // TODO: UI de remover
-        Debug.Log($"Carta removida de la mano: {card.cardName}");
     }
     
     public void ClearHand()
