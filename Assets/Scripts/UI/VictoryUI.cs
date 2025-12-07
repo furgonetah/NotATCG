@@ -15,6 +15,6 @@ public class VictoryUI : MonoBehaviour
     public void ShowVictory(Player winner, int winnerScore, int loserScore)
     {
         victoryPanel.SetActive(true);
-        victoryText.text = $"¡{winner.playerName} gana la partida!\n{winnerScore} - {loserScore}";
+        victoryText.text = $"¡{winner.playerName} gana la partida!";
     }
 }

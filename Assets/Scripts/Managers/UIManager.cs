@@ -75,9 +75,9 @@ public class UIManager : MonoBehaviour
         player1_Name_Text.text = GameManager.Current.player1.playerName;
         player2_Name_Text.text = GameManager.Current.player2.playerName;
 
-        player1_HP_Text.text = $"HP: {GameManager.Current.player1.currentHP}/{GameManager.Current.player1.maxHP}";
-        player2_HP_Text.text = $"HP: {GameManager.Current.player2.currentHP}/{GameManager.Current.player2.maxHP}";
+        player1_HP_Text.text = $"{GameManager.Current.player1.currentHP}";
+        player2_HP_Text.text = $"{GameManager.Current.player2.currentHP}";
 
-        turnInfo_Text.text = $"Turno de: {gameState.activePlayer.playerName}";
+        turnInfo_Text.text = $"Turno de {gameState.activePlayer.playerName}";
     }
 }

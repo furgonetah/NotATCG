@@ -385,7 +385,7 @@ public class PhotonGameManager : GameManager, IPunObservable, IInRoomCallbacks
         Player winner = (winnerID == 1) ? player1 : player2;
         int loserScore = (winner == player1) ? player2.roundsWon : player1.roundsWon;
 
-        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] ¡{winner.playerName} gana la partida {winner.roundsWon}-{loserScore}!");
+        Debug.Log($"[{(PhotonNetwork.IsMasterClient ? "MASTER" : "CLIENT")}] ¡{winner.playerName} gana la partida!");
 
         victoryUI.ShowVictory(winner, winner.roundsWon, loserScore);
     }
