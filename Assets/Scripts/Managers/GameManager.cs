@@ -3,24 +3,17 @@ using Photon.Pun;
 
 public class GameManager : MonoBehaviour
 {
-
-    // TODO: todo lo referente a los tiempos hay que corregirlos
     public static GameManager Instance { get; private set; }
 
-    /// <summary>
     /// Devuelve el GameManager activo (GameManager en singleplayer, PhotonGameManager en multijugador)
-    /// Usar esta propiedad para acceso unificado en todos los scripts
-    /// </summary>
     public static GameManager Current
     {
         get
         {
-            // Si estamos en multijugador, usar PhotonGameManager
             if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonGameManager.Instance != null)
             {
                 return PhotonGameManager.Instance;
             }
-            // Caso por defecto: GameManager singleton
             return Instance;
         }
     }
@@ -46,7 +39,6 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        // Singleton
         if (Instance == null)
         {
             Instance = this;
@@ -57,7 +49,6 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // Inicializar GameState
         gameState = new GameState();
     }
 
@@ -68,7 +59,6 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // Actualizar timer si está activo
         if (gameState.isTimerActive && gameState.currentPhase == GamePhase.Playing)
         {
             UpdateTimer();
@@ -91,10 +81,6 @@ public class GameManager : MonoBehaviour
 
         gameState.SetPhase(GamePhase.Playing);
         turnManager.StartFirstTurn();
-
-        Debug.Log("Juego inicializado.");
-        Debug.Log($"Active Player: {gameState.activePlayer?.playerName ?? "NULL"}");
-        Debug.Log($"Opponent Player: {gameState.opponentPlayer?.playerName ?? "NULL"}");
     }
 
     void UpdateTimer()
@@ -102,11 +88,9 @@ public class GameManager : MonoBehaviour
         currentTime -= Time.deltaTime;
         gameState.timeRemaining = currentTime;
 
-        // Penalización por timeout
         if (currentTime <= 0)
         {
             gameState.activePlayer.TakeDamage(GameConstants.TIMEOUT_DAMAGE_PER_SECOND);
-            Debug.Log($"{gameState.activePlayer.playerName} pierde {GameConstants.TIMEOUT_DAMAGE_PER_SECOND} PV por timeout!");
         }
     }
 
@@ -116,8 +100,6 @@ public class GameManager : MonoBehaviour
 
         Player winner = (deadPlayer == player1) ? player2 : player1;
         winner.roundsWon++;
-
-        Debug.Log($"{winner.playerName} gana la ronda {gameState.currentRound}!");
 
         if (winner.roundsWon >= GameConstants.ROUNDS_TO_WIN)
         {
@@ -142,8 +124,6 @@ public class GameManager : MonoBehaviour
 
         gameState.SetPhase(GamePhase.Playing);
         turnManager.StartFirstTurn();
-
-        Debug.Log($"Comienza la ronda {gameState.currentRound}");
     }
 
     void EndGame(Player winner)
@@ -152,8 +132,6 @@ public class GameManager : MonoBehaviour
         gameState.isTimerActive = false;
 
         int loserScore = (winner == player1) ? player2.roundsWon : player1.roundsWon;
-
-        Debug.Log($"¡{winner.playerName} gana la partida {winner.roundsWon}-{loserScore}!");
 
         victoryUI.ShowVictory(winner, winner.roundsWon, loserScore);
     }

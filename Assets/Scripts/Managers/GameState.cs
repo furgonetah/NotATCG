@@ -7,15 +7,11 @@ public class GameState
     public Player opponentPlayer;
     public int currentRound = 1;
     public int maxRounds = 3;
-
-    // Info de turno actual (para cartas trampa)
     public Card lastCardPlayed;
     public int damageDealtThisTurn;
     public int healingDoneThisTurn;
     public bool playerDrewCardThisTurn;
     public int cardsPlayedThisTurn;
-
-    // TODO: Todo lo referente al tiempo, especificado en GameManager
     public float timeRemaining;
     public bool isTimerActive = false;
 
@@ -41,7 +37,6 @@ public class GameState
     public void SetPhase(GamePhase newPhase)
     {
         currentPhase = newPhase;
-        Debug.Log($"GameState cambió a: {newPhase}");
     }
     public void SwapActivePlayer()
     {

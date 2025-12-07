@@ -1,11 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
 
-/// <summary>
-/// Gestiona las manos de ambos jugadores
-/// - Single-player: Muestra solo la mano del jugador activo
-/// - Multijugador: HandDisplayUI se encarga de mostrar solo la mano local
-/// </summary>
 public class HandManager : MonoBehaviour
 {
     [Header("Hand Display References")]
@@ -22,29 +17,19 @@ public class HandManager : MonoBehaviour
             gameManager = GameManager.Current;
         }
 
-        // Solo en single-player, mostrar la mano del jugador activo
-        // En multijugador, HandDisplayUI se encarga de mostrar solo la mano local
         if (!PhotonNetwork.IsConnected || !PhotonNetwork.InRoom)
         {
             UpdateActiveHand();
         }
     }
 
-    /// <summary>
-    /// Actualiza qué mano debe mostrarse según el jugador activo
-    /// Solo se usa en modo single-player
-    /// </summary>
     public void UpdateActiveHand()
     {
-        // En multijugador, no alternar visibilidad de manos
-        // HandDisplayUI ya se encarga de mostrar solo la mano local
         if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
         {
             Debug.Log("[HandManager] Modo multijugador - HandDisplayUI controla visibilidad");
             return;
         }
-
-        // Intentar obtener GameManager si aún no está asignado
         if (gameManager == null)
         {
             gameManager = GameManager.Current;
@@ -67,10 +52,6 @@ public class HandManager : MonoBehaviour
             ShowPlayer2Hand();
         }
     }
-
-    /// <summary>
-    /// Muestra solo la mano del jugador 1
-    /// </summary>
     void ShowPlayer1Hand()
     {
         if (player1HandDisplay != null)
@@ -82,13 +63,7 @@ public class HandManager : MonoBehaviour
         {
             player2HandDisplay.HideHand();
         }
-
-        Debug.Log("Mostrando mano de Player 1");
     }
-
-    /// <summary>
-    /// Muestra solo la mano del jugador 2
-    /// </summary>
     void ShowPlayer2Hand()
     {
         if (player2HandDisplay != null)
@@ -100,14 +75,7 @@ public class HandManager : MonoBehaviour
         {
             player1HandDisplay.HideHand();
         }
-
-        Debug.Log("Mostrando mano de Player 2");
     }
-
-    /// <summary>
-    /// Limpia las selecciones de ambas manos
-    /// Útil al cambiar de turno
-    /// </summary>
     public void ClearAllSelections()
     {
         if (player1HandDisplay != null)
@@ -120,10 +88,6 @@ public class HandManager : MonoBehaviour
             player2HandDisplay.ClearSelection();
         }
     }
-
-    /// <summary>
-    /// Fuerza refresh de la mano del jugador activo
-    /// </summary>
     public void RefreshActiveHand()
     {
         if (gameManager == null || gameManager.gameState == null)

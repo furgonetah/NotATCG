@@ -5,8 +5,8 @@ public class TurnManager : MonoBehaviour
 {
     [Header("References")]
     public CardQueue cardQueue;
-    public HandManager handManager; // CAMBIADO: Ahora usa HandManager en lugar de HandDisplayUI
-    public EndTurnButton endTurnButton; // Referencia al botón de fin de turno
+    public HandManager handManager;
+    public EndTurnButton endTurnButton;
 
     private GameState gameState;
     private PhotonCardQueue photonCardQueue;
@@ -14,7 +14,6 @@ public class TurnManager : MonoBehaviour
 
     public void StartFirstTurn()
     {
-        // Obtener GameState del manager apropiado (PhotonGameManager si estamos en red)
         if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonGameManager.Instance != null)
         {
             gameState = PhotonGameManager.Instance.gameState;
@@ -26,40 +25,32 @@ public class TurnManager : MonoBehaviour
 
         gameState.ResetTurnData();
 
-        // Actualizar qué mano mostrar
         if (handManager != null)
         {
             handManager.UpdateActiveHand();
         }
 
-        // Actualizar estado del botón de fin de turno
         if (endTurnButton != null)
         {
             endTurnButton.UpdateButtonState();
         }
 
-        Debug.Log($"[TurnManager] Turno de {gameState.activePlayer.playerName}");
     }
     
     public void EndTurn()
     {
-        Debug.Log("[TurnManager] EndTurn llamado");
 
-        // Verificar si estamos en modo multijugador
         bool isNetworked = PhotonNetwork.IsConnected && PhotonNetwork.InRoom;
 
         if (isNetworked)
         {
-            // Modo multijugador: Usar PhotonCardQueue
             if (photonCardQueue == null)
             {
-                // Buscar PhotonCardQueue en el GameObject que tiene CardQueue
                 photonCardQueue = cardQueue.GetComponent<PhotonCardQueue>();
             }
 
             if (photonCardQueue != null)
             {
-                Debug.Log("[TurnManager] Usando PhotonCardQueue para sincronización en red");
                 photonCardQueue.EndTurnNetwork(gameState.activePlayer, gameState.opponentPlayer);
             }
             else
@@ -69,8 +60,6 @@ public class TurnManager : MonoBehaviour
         }
         else
         {
-            // Modo single-player: Usar CardQueue normal
-            Debug.Log("[TurnManager] Usando CardQueue local (single-player)");
             cardQueue.ExecuteQueue(gameState.activePlayer, gameState.opponentPlayer);
 
             if (gameState.playerDiedThisTurn)
@@ -82,35 +71,28 @@ public class TurnManager : MonoBehaviour
                 return;
             }
 
-            // Limpiar selecciones de todas las manos
             if (handManager != null)
             {
                 handManager.ClearAllSelections();
             }
 
-            // Cambiar jugador activo
             gameState.SwapActivePlayer();
 
-            // Resetear datos de turno
             gameState.ResetTurnData();
 
-            // Actualizar qué mano mostrar
             if (handManager != null)
             {
                 handManager.UpdateActiveHand();
             }
 
-            // Actualizar estado del botón de fin de turno
             if (endTurnButton != null)
             {
                 endTurnButton.UpdateButtonState();
             }
 
-            Debug.Log($"[TurnManager] Turno de {gameState.activePlayer.playerName}");
         }
     }
 
-    //Para carta especial que incrementa el número de cartas a jugar en un turno
     public void ModifyCardsPerTurn(int amount)
     {
         cardQueue.ModifyMaxCardsThisTurn(amount);
