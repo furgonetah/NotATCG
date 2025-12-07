@@ -8,9 +8,6 @@ public class PhotonCardQueue : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        // photonView ya está disponible automáticamente desde MonoBehaviourPunCallbacks
-
-        // Obtener referencia a CardQueue
         cardQueue = GetComponent<CardQueue>();
         if (cardQueue == null)
         {

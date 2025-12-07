@@ -20,19 +20,15 @@ public class RoomUI : MonoBehaviour
 
     void Start()
     {
-        // Setup inicial
         mainMenuPanel.SetActive(true);
         waitingRoomPanel.SetActive(false);
 
-        // Conectar botones
         createRoomButton.onClick.AddListener(OnCreateRoomClicked);
         joinRoomButton.onClick.AddListener(OnJoinRoomClicked);
 
-        // Estado inicial
         UpdateStatusText("Conectando a Photon...");
         SetButtonsInteractable(false);
 
-        // Esperar a que NetworkManager se conecte
         InvokeRepeating("CheckConnection", 0.5f, 0.5f);
     }
 
@@ -48,7 +44,6 @@ public class RoomUI : MonoBehaviour
 
     void Update()
     {
-        // Actualizar UI de sala de espera si estamos en una sala
         if (NetworkManager.Instance != null && NetworkManager.Instance.isInRoom)
         {
             if (!waitingRoomPanel.activeSelf)
@@ -112,7 +107,7 @@ public class RoomUI : MonoBehaviour
     {
         if (PhotonNetwork.InRoom)
         {
-            roomNameText.text = $"Sala: {PhotonNetwork.CurrentRoom.Name}";
+            roomNameText.text = $"ID de sala: {PhotonNetwork.CurrentRoom.Name}";
             playersCountText.text = $"Jugadores: {PhotonNetwork.CurrentRoom.PlayerCount}/2";
 
             if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
