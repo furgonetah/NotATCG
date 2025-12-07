@@ -16,7 +16,6 @@ public class CardQueue : MonoBehaviour
         if (CanAddCard())
         {
             queuedCards.Add(card);
-            // TODO: feedback visual (highlight, animación, etc.)
         }
     }
 
@@ -34,7 +33,6 @@ public class CardQueue : MonoBehaviour
     {
         if (queuedCards.Count == 0)
         {
-            Debug.Log("Turno finalizado sin jugar cartas.");
             return;
         }
 
@@ -50,6 +48,5 @@ public class CardQueue : MonoBehaviour
     public void ModifyMaxCardsThisTurn(int amount)
     {
         maxCardsPerTurn += amount;
-        Debug.Log($"Límite de cartas modificado a: {maxCardsPerTurn}");
     }
 }

@@ -7,36 +7,29 @@ public class DrawCardsSpecial : SpecialCard
     [Header("Draw Effect")]
     public int cardsToDraw = 2;
     
-    // Valor modificado
     private int modifiedCardsToDraw;
     
     protected override void ExecuteSpecialEffect(Player caster, Player target)
     {
         int finalCards = ModifierApplicationHelper.GetFinalValue(modifiedCardsToDraw, cardsToDraw);
 
-        // Si estamos en multijugador, usar PhotonPlayer para logs deterministas
         if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
         {
             PhotonPlayer photonPlayer = caster.GetComponent<PhotonPlayer>();
             if (photonPlayer != null)
             {
-                // DrawCards de PhotonPlayer es determinista (se ejecuta igual en ambos clientes)
                 photonPlayer.DrawCards(finalCards);
             }
             else
             {
-                Debug.LogWarning($"{cardName}: PhotonPlayer no encontrado en {caster.playerName}, usando Player.DrawCards");
                 caster.DrawCards(finalCards);
             }
         }
         else
         {
-            // Modo local (sin red)
             caster.DrawCards(finalCards);
-            Debug.Log($"{cardName}: {caster.playerName} roba {finalCards} cartas");
         }
 
-        // Resetear
         modifiedCardsToDraw = 0;
     }
     

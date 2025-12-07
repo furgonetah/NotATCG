@@ -6,12 +6,10 @@ public class UIManager : MonoBehaviour
     [Header("Player 1 UI")]
     public TextMeshProUGUI player1_HP_Text;
     public TextMeshProUGUI player1_Name_Text;
-    public HealthBarUI player1_HealthBar;
 
     [Header("Player 2 UI")]
     public TextMeshProUGUI player2_HP_Text;
     public TextMeshProUGUI player2_Name_Text;
-    public HealthBarUI player2_HealthBar;
 
     [Header("Round Indicators")]
     public RoundIndicatorUI roundIndicator;
@@ -20,33 +18,14 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI turnInfo_Text;
 
     private GameState gameState;
-    private bool healthBarsInitialized = false;
 
     void Start()
     {
         if (GameManager.Current != null)
         {
             gameState = GameManager.Current.gameState;
-            InitializeHealthBars();
             UpdateAllUI();
         }
-    }
-
-    void InitializeHealthBars()
-    {
-        if (GameManager.Current == null) return;
-
-        if (player1_HealthBar != null && GameManager.Current.player1 != null)
-        {
-            player1_HealthBar.Initialize(GameManager.Current.player1);
-        }
-
-        if (player2_HealthBar != null && GameManager.Current.player2 != null)
-        {
-            player2_HealthBar.Initialize(GameManager.Current.player2);
-        }
-
-        healthBarsInitialized = true;
     }
 
     void Update()
@@ -56,12 +35,6 @@ public class UIManager : MonoBehaviour
             if (gameState == null)
             {
                 gameState = GameManager.Current.gameState;
-            }
-
-            // Inicializar barras de vida si no se ha hecho
-            if (!healthBarsInitialized)
-            {
-                InitializeHealthBars();
             }
 
             UpdateAllUI();

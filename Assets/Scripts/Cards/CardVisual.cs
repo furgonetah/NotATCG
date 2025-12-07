@@ -3,10 +3,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using DG.Tweening;
 
-/// <summary>
 /// Maneja la representación visual e interacción de una carta en la UI.
 /// Separado de Card.cs (lógica de juego) para mantener separación de responsabilidades.
-/// </summary>
+
 public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
                            IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
@@ -29,21 +28,19 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     [Header("State")]
     public bool selected = false;
-    public Card cardData; // Referencia a la carta lógica (AttackCard, DefenseCard, etc.)
+    public Card cardData; 
     
     [Header("References")]
     private RectTransform rectTransform;
     private Canvas canvas;
     private CanvasGroup canvasGroup;
     private Vector3 originalScale;
-    private int visualIndex; // Índice visual en la mano (para animaciones)
+    private int visualIndex; 
     
-    // Variables para rotación durante drag
+    [Header("Rotation during drag")]
     private Vector2 lastDragPosition;
     private float currentRotation = 0f;
     private float targetRotation = 0f;
-    
-    // Events para comunicación con HandDisplayUI
     [HideInInspector] public UnityEvent<CardVisual> PointerEnterEvent = new UnityEvent<CardVisual>();
     [HideInInspector] public UnityEvent<CardVisual> PointerExitEvent = new UnityEvent<CardVisual>();
     [HideInInspector] public UnityEvent<CardVisual> BeginDragEvent = new UnityEvent<CardVisual>();
@@ -183,10 +180,7 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     #endregion
 
     #region Selection Methods
-    
-    /// <summary>
-    /// Selecciona la carta (la levanta visualmente)
-    /// </summary>
+
     public void Select()
     {
         selected = true;
@@ -194,51 +188,37 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         transform.DOScale(originalScale, animationDuration); // Volver a escala normal
     }
 
-    /// <summary>
-    /// Deselecciona la carta (la baja a su posición original)
-    /// </summary>
     public void Deselect()
     {
         selected = false;
         transform.DOLocalMove(Vector3.zero, animationDuration).SetEase(Ease.OutQuad);
     }
     
-    /// <summary>
-    /// Actualiza la descripción de la carta en el UI
-    /// </summary>
     public void UpdateDescription(string newDescription)
     {
-        // Buscar los 3 componentes de texto
         TMPro.TextMeshProUGUI titleText = transform.Find("TitleText")?.GetComponent<TMPro.TextMeshProUGUI>();
         TMPro.TextMeshProUGUI descriptionText = transform.Find("DescriptionText")?.GetComponent<TMPro.TextMeshProUGUI>();
         TMPro.TextMeshProUGUI numberText = transform.Find("NumberText")?.GetComponent<TMPro.TextMeshProUGUI>();
 
-        // Actualizar título
         if (titleText != null && cardData != null)
         {
             titleText.text = cardData.cardName;
         }
 
-        // Actualizar descripción
         if (descriptionText != null)
         {
             descriptionText.text = newDescription;
         }
 
-        // Actualizar valor numérico
         if (numberText != null && cardData != null)
         {
             string numericValue = ExtractNumericValue(cardData);
             numberText.text = numericValue;
         }
 
-        // Actualizar icono de tipo
         UpdateTypeIcon();
     }
 
-    /// <summary>
-    /// Actualiza el icono de tipo de carta según CardType
-    /// </summary>
     public void UpdateTypeIcon()
     {
         if (cardData == null) return;
@@ -271,9 +251,6 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
     }
 
-    /// <summary>
-    /// Actualiza el arte conceptual de la carta individual
-    /// </summary>
     public void UpdateCardArt()
     {
         if (cardData == null) return;
@@ -292,7 +269,6 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             return;
         }
 
-        // Asignar el sprite único de esta carta
         if (cardData.cardArt != null)
         {
             artImage.sprite = cardData.cardArt;
@@ -303,25 +279,19 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     #region Visual Organization Methods
     
-    /// <summary>
     /// Obtiene el índice del parent (slot) en la jerarquía
-    /// </summary>
     public int ParentIndex()
     {
         return transform.parent.GetSiblingIndex();
     }
 
-    /// <summary>
     /// Actualiza el índice visual de la carta (usado para animaciones de swap)
-    /// </summary>
     public void UpdateIndex(int totalCards)
     {
         visualIndex = ParentIndex();
     }
 
-    /// <summary>
     /// Animación cuando dos cartas intercambian posiciones
-    /// </summary>
     public void Swap(int direction)
     {
         // Pequeña animación de "bounce" al intercambiar
@@ -337,9 +307,7 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     
     #endregion
 
-    /// <summary>
     /// Retorna la carta a su posición correcta (seleccionada o no)
-    /// </summary>
     public void ReturnToPosition(bool useTween = true)
     {
         Vector3 targetPos = selected ? new Vector3(0, selectionOffset, 0) : Vector3.zero;
@@ -354,9 +322,7 @@ public class CardVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
     }
 
-    /// <summary>
     /// Extrae el valor numérico de una carta para mostrarlo en NumberText
-    /// </summary>
     string ExtractNumericValue(Card card)
     {
         if (card is AttackCard attackCard)
