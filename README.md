@@ -21,7 +21,7 @@
 ### Para Desarrolladores
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/tcg-project.git
+git clone https://github.com/furgonetah/NotATCG.git
 
 # 2. Abrir en Unity Hub
 # Unity 2023.x o superior
@@ -282,7 +282,7 @@ Assets/
 
 #### 1. Clonar Repositorio
 ```bash
-git clone https://github.com/tu-usuario/tcg-project.git
+git clone https://github.com/furgonetah/NotATCG.git
 cd tcg-project
 ```
 
@@ -318,15 +318,7 @@ Para probar multijugador en local:
 
 ## 📚 Documentación
 
-### Para Desarrolladores
-- **[Manual del Programador](MANUAL_PROGRAMADOR.md)** - Arquitectura completa, estructuras de datos, flujos de código
-- **[Guía de Contribución](CONTRIBUTING.md)** - Cómo contribuir al proyecto
-- **[API Reference](docs/API.md)** - Documentación de clases y métodos
-
-### Para Diseñadores
-- **[Crear Nueva Carta](docs/CrearCarta.md)** - Guía paso a paso
-- **[Balanceo de Juego](docs/Balanceo.md)** - Constantes y tweaking
-- **[Assets y Arte](docs/Assets.md)** - Guía de estilo visual
+Toda la documentación del proyecto (manual de usuario, manual de programador, análisis de mercado, etc) está recogida en la memoria del TFG, no dudes en pedirla, estaré encantado de ayudarte.
 
 ### Documentación Técnica Clave
 - **GameConstants.cs** - Todas las constantes del juego (HP, daño, timings)
@@ -344,10 +336,10 @@ Para probar multijugador en local:
 - [x] UI con drag & drop fluido
 - [x] Multijugador online con Photon PUN 2
 - [x] Sistema de turnos y rondas
-- [x] Animaciones con DOTween
-- [x] Timer individual y penalizaciones
+- [x] Animaciones con DOTween (parcialmente)
 
 ### 🚧 En Progreso (v1.1)
+- [ ] Timer individual y penalizaciones
 - [ ] Sistema de trampas completo (TrapCard + TrapManager)
 - [ ] Tutorial interactivo paso a paso
 - [ ] Efectos visuales para daño/curación
@@ -355,6 +347,7 @@ Para probar multijugador en local:
 
 ### 🔮 Futuro (v2.0+)
 - [ ] Sistema de escudos independiente de HP
+- [ ] Backend funcional para gestionar datos del juego
 - [ ] Deck builder in-game (editor de mazos)
 - [ ] Modo torneo/ranking online
 - [ ] Replays y estadísticas de partidas
@@ -381,7 +374,7 @@ Este proyecto fue desarrollado como **Trabajo de Fin de Grado** para el grado de
 
 ## 🤝 Contribuir
 
-¡Las contribuciones son bienvenidas! Por favor, lee la [guía de contribución](CONTRIBUTING.md) antes de enviar un PR.
+¡Las contribuciones son bienvenidas! Aún no tengo una guía de contribución, pero se realizará en el futuro para evitar confusiones.
 
 ### Áreas donde Ayudar
 - 🐛 **Reportar bugs** - Crea un issue con detalles
@@ -413,7 +406,9 @@ Este proyecto está bajo la licencia **MIT**. Ver [LICENSE](LICENSE) para más d
 ## 👤 Autor
 
 **César Fuentes Ayuso**
-- 🐱 GitHub: [@furgonetah](https://github.com/futgonetah)
+- 🐱 GitHub personal: [@furgonetah](https://github.com/furgonetah)
+- 🐱 GitHub pprofesional: [@fuentesayuso-dev](https://github.com/fuentesayuso-dev)
+- 📞 Discord: @furgonetah
 
 ---
 
@@ -423,7 +418,7 @@ Este proyecto está bajo la licencia **MIT**. Ver [LICENSE](LICENSE) para más d
 - **Comunidad de Unity** por recursos y tutoriales
 - **Demigiant** por la excelente librería DOTween
 - **Exit Games** por Photon PUN 2
-- **Beta testers** que ayudaron a balancear el juego
+- **A mi novia** por aguantarme durante todo el proceso
 
 ---
 
@@ -431,9 +426,9 @@ Este proyecto está bajo la licencia **MIT**. Ver [LICENSE](LICENSE) para más d
 
 ¿Necesitas ayuda o encontraste un bug?
 
-- 📋 **Issues**: [GitHub Issues](https://github.com/tu-usuario/tcg-project/issues)
-- 💬 **Discusiones**: [GitHub Discussions](https://github.com/tu-usuario/tcg-project/discussions)
-- 📧 **Email**: cesar.fuentes@example.com
+- 📋 **Issues**: [GitHub Issues](https://github.com/furgonetah/NotATCG/issues)
+- 💬 **Discusiones**: [GitHub Discussions](https://github.com/furgonetah/NotATCG/discussions)
+- 📧 **Email**: fuentesayusocesar@gmail.com
 
 ---
 
@@ -441,7 +436,7 @@ Este proyecto está bajo la licencia **MIT**. Ver [LICENSE](LICENSE) para más d
 
 **⭐ Si te gusta el proyecto, dale una estrella en GitHub ⭐**
 
-[![Star on GitHub](https://img.shields.io/github/stars/furgonetah/not-a-tcg?style=social)](https://github.com/furgonetah/not-a-tcg)
+[![Star on GitHub](https://img.shields.io/github/stars/furgonetah/NotATCG?style=social)](https://github.com/furgonetah/NotATCG)
 
 Hecho con ❤️ usando Unity
 
